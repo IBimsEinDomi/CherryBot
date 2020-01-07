@@ -112,7 +112,7 @@ async def on_message(message):
             await message.author.send(embed=embed)
 
     else:
-        if message.guild.id == 479691134482776066:
+        if message.guild.id in CONFIG.AllowedServer:
             if message.content.startswith(CONFIG.PREFIX + 'stop'):
                 client.AppInfo = await client.application_info()
                 if message.author.id == client.AppInfo.owner.id:
