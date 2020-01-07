@@ -1,13 +1,13 @@
 import discord
 import datetime
-import time
+import traceback
 import random
 import asyncio
 from config import CONFIG
 from config.GAMES import __games__, __gamesTimer__
 
 client = discord.Client()
-__version__ = '0.3.1'
+__version__ = '0.3.3'
 
 @client.event
 async def on_ready():
@@ -20,7 +20,24 @@ async def on_ready():
     print(f'Bot Name: {client.user.name}')
     print(f'Discord Version: {discord.__version__}')
     print(f'Bot Version: {__version__}')
+    client.AppInfo = await client.application_info()
+    print(f'Owner: {client.AppInfo.owner}')
 
+@client.event
+async def on_error(event, *args, **kwargs):
+    if client.dev:
+        traceback.print_exc()
+    else:
+        embed = discord.Embed(title=':x: Event Fehler', colour=0xe74c3c) #Red
+        embed.add_field(name='Event', value=event)
+        embed.description = '```py\n%s\n```' % traceback.format_exc()
+        embed.timestamp = datetime.datetime.utcnow()
+        try:
+            await client.AppInfo.owner.send(embed=embed)
+        except:
+            pass
+
+@client.event
 async def _randomGame():
     while True:
         guildCount = len(client.guilds)
@@ -28,43 +45,94 @@ async def _randomGame():
         randomGame = random.choice(__games__)
         await client.change_presence(activity=discord.Activity(type=randomGame[0], name=randomGame[1].format(guilds = guildCount, members = memberCount)))
         await asyncio.sleep(__gamesTimer__)
+        if CONFIG.clientLogout == True:
+            await client.change_presence(status=discord.Status.do_not_disturb, activity=discord.Game(name="Bot deaktiviert"))
+            break
+
+
+@client.event
+async def on_guild_join(guild):
+    embed = discord.Embed(title=':white_check_mark: Guild hinzugefügt', color=0x2ecc71,
+                          description="Server Name: " + str(guild.name) +
+                                      "\nServer ID: " + str(guild.id) +
+                                      "\nServer Besitzer: " + str(guild.owner.mention) +
+                                      "\nServer Region: " + str(guild.region))
+    embed.add_field(name="Mitglieder", value=str(guild.member_count) + " Mitglieder")
+    CreateDateYear = str(guild.created_at)[0:4]
+    CreateDateMonth = str(guild.created_at)[5:7]
+    CreateDateDay = str(guild.created_at)[8:10]
+    CreateDateTime = str(guild.created_at)[11:16]
+    embed.add_field(name="Erstellt am",
+                    value=CreateDateDay + "." + CreateDateMonth + "." + CreateDateYear + " um " + CreateDateTime + " Uhr")
+    embed.set_thumbnail(url=guild.icon_url)
+    embed.timestamp = datetime.datetime.utcnow()
+    await client.AppInfo.owner.send(embed=embed)
+
+@client.event
+async def on_guild_remove(guild):
+    embed = discord.Embed(title=':x: Guild entfernt', color=0xe74c3c,
+                          description="Server Name: " + str(guild.name) +
+                                      "\nServer ID: " + str(guild.id) +
+                                      "\nServer Besitzer: " + str(guild.owner.mention) +
+                                      "\nServer Region: " + str(guild.region))
+    embed.add_field(name="Mitglieder", value=str(guild.member_count) + " Mitglieder")
+    CreateDateYear = str(guild.created_at)[0:4]
+    CreateDateMonth = str(guild.created_at)[5:7]
+    CreateDateDay = str(guild.created_at)[8:10]
+    CreateDateTime = str(guild.created_at)[11:16]
+    embed.add_field(name="Erstellt am", value=CreateDateDay + "." + CreateDateMonth + "." + CreateDateYear + " um " + CreateDateTime + " Uhr")
+    embed.set_thumbnail(url=guild.icon_url)
+    embed.timestamp = datetime.datetime.utcnow()
+    await client.AppInfo.owner.send(embed=embed)
 
 @client.event
 async def on_message(message):
     if isinstance(message.channel, discord.DMChannel):
-        embed = discord.Embed(title="", description=":x: Hey, ich bin nur ein Bot und kann noch nicht darauf antworten", color=0xff0000)
-        await message.author.send(embed=embed)
+        if message.author.id == client.AppInfo.owner.id:
+            if message.content.startswith(CONFIG.PREFIX + 'stop'):
+                if CONFIG.clientLogout == False:
+                    embed = discord.Embed(title="", description="Der Bot wird deaktiviert...", color=0xe74c3c)
+                    await client.change_presence(status=discord.Status.do_not_disturb, activity=discord.Game(name="Bot deaktiviert"))
+                    await message.channel.send(embed=embed)
+                    CONFIG.clientLogout = True
+                else:
+                    embed = discord.Embed(title="", description=":x: Der Bot ist schon deaktiviert", color=0xff0000)
+                    await message.channel.send(embed=embed)
+            if message.content.startswith(CONFIG.PREFIX + 'login'):
+                if CONFIG.clientLogout == True:
+                    embed = discord.Embed(title="", description="Der Bot wird aktiviert...", color=0x2ecc71)
+                    client.gamesLoop = asyncio.ensure_future(_randomGame())
+                    await message.channel.send(embed=embed)
+                    CONFIG.clientLogout = False
+                else:
+                    embed = discord.Embed(title="", description=":x: Das geht nur, wenn der Bot deaktiviert ist", color=0xff0000)
+                    await message.channel.send(embed=embed)
+        else:
+            embed = discord.Embed(title="", description=":x: Hey, ich bin nur ein Bot und kann noch nicht darauf antworten", color=0xff0000)
+            await message.author.send(embed=embed)
+
     else:
-        if message.guild.id == CONFIG.AllowedServer[1]:
+        if message.guild.id == 479691134482776066:
             if message.content.startswith(CONFIG.PREFIX + 'stop'):
                 client.AppInfo = await client.application_info()
                 if message.author.id == client.AppInfo.owner.id:
                     if CONFIG.clientLogout == False:
-                        embed = discord.Embed(title="", description="Der Bot wird deaktiviert...", color=0xff0000)
-                        await client.change_presence(status=discord.Status.idle, activity=discord.Game(name="Zurzeit nicht erreichbar"))
-                        embed.set_footer(text="Server Patches",
-                        icon_url=client.user.avatar_url, )
-                        embed.timestamp = datetime.datetime.utcnow()
+                        embed = discord.Embed(title="", description="Der Bot wird deaktiviert...", color=0xe74c3c)
+                        await client.change_presence(status=discord.Status.do_not_disturb, activity=discord.Game(name="Bot deaktiviert"))
                         await message.channel.send(embed=embed)
                         CONFIG.clientLogout = True
                     else:
-                        embed = discord.Embed(title="", description=":x: Der Bot ist schon aus", color=0xff0000)
+                        embed = discord.Embed(title="", description=":x: Der Bot ist schon deaktiviert", color=0xff0000)
                         await message.channel.send(embed=embed)
                 else:
                     embed = discord.Embed(title="", description=":x: Hey, dafür hast du keine Rechte!", color=0xff0000)
-                    embed.set_footer(text="Server Patches",
-                    icon_url=client.user.avatar_url, )
-                    embed.timestamp = datetime.datetime.utcnow()
                     await message.channel.send(embed=embed)
             if message.content.startswith(CONFIG.PREFIX + 'login'):
                     client.AppInfo = await client.application_info()
                     if message.author.id == client.AppInfo.owner.id:
                         if CONFIG.clientLogout == True:
-                            embed = discord.Embed(title="", description="Der Bot wird aktiviert...", color=0x00ff00)
-                            embed.set_footer(text="Server Patches",
-                            icon_url=client.user.avatar_url, )
-                            embed.timestamp = datetime.datetime.utcnow()
-                            await client.change_presence(status=discord.Status.online, activity=discord.Game(name=activity))
+                            embed = discord.Embed(title="", description="Der Bot wird aktiviert...", color=0x2ecc71)
+                            client.gamesLoop = asyncio.ensure_future(_randomGame())
                             await message.channel.send(embed=embed)
                             CONFIG.clientLogout = False
                         else:
@@ -72,9 +140,6 @@ async def on_message(message):
                             await message.channel.send(embed=embed)
                     else:
                         embed = discord.Embed(title="", description=":x: Hey, dafür hast du keine Rechte! ", color=0xff0000)
-                        embed.set_footer(text="Server Patches",
-                        icon_url=client.user.avatar_url, )
-                        embed.timestamp = datetime.datetime.utcnow()
                         await message.channel.send(embed=embed)
 
             if CONFIG.clientLogout == False:
@@ -99,8 +164,6 @@ async def on_message(message):
 
                 if client.user.mentioned_in(message) and message.mention_everyone is False:
                     await message.channel.send('Meine Prefix ist **&** ' + message.author.mention)
-                if message.content.startswith("prefix"):
-                    await message.channel.send('Meine Prefix ist **&** ' + message.author.mention)
 
                 if message.content.startswith(CONFIG.PREFIX + "bot-info"):
                     client.AppInfo = await client.application_info()
@@ -124,7 +187,7 @@ async def on_message(message):
                         await message.channel.send(embed=embed)
 
                 if message.content.startswith(CONFIG.PREFIX + "sv-info"):
-                    if (message.guild.id == 479691134482776066) | (message.guild.id == 657578121163309069):
+                    if message.guild.id == 479691134482776066:
                         serverLicense = "Supporter Lizenz"
                     else:
                         serverLicense = "Keine Lizenz"
@@ -159,13 +222,12 @@ async def on_message(message):
                     await message.channel.send("Bot Ping = " + latency + "ms")
 
         else:
-            if message.content.startswith(CONFIG.PREFIX):
+            if client.user.mentioned_in(message) and message.mention_everyone is False:
                 client.AppInfo = await client.application_info()
-                embed = discord.Embed(title="Keine Lizenz", description=":x: Hey, dieser Server hat keine Lizenz! Für eine Lizenz wende dich\nbitte an " + str(client.AppInfo.owner), color=0xff0000)
+                embed = discord.Embed(title="Keine Lizenz", description=":x: Hey, dieser Server hat keine Lizenz! "
+                "Für eine Lizenz wende dich\nbitte an " + client.AppInfo.owner.mention, color=0xff0000)
                 embed.set_footer(text="Server Patches", icon_url=client.user.avatar_url)
                 embed.timestamp = datetime.datetime.utcnow()
                 await message.channel.send(embed=embed)
-
-
 
 client.run(CONFIG.TOKEN)
