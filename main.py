@@ -7,7 +7,7 @@ from config import CONFIG
 from config.GAMES import __games__, __gamesTimer__
 
 client = discord.Client()
-__version__ = '0.3.4'
+__version__ = '0.3.5'
 __JoinPosition__ = "Noch nicht verfügbar"
 
 @client.event
@@ -53,7 +53,7 @@ async def _randomGame():
 
 @client.event
 async def on_guild_join(guild):
-    embed = discord.Embed(title=':white_check_mark: Guild hinzugefügt', color=0x2ecc71,
+    embed = discord.Embed(title=':white_check_mark: Zum Server hinzugefügt', color=0x2ecc71,
                           description="Server Name: " + str(guild.name) +
                                       "\nServer ID: " + str(guild.id) +
                                       "\nServer Besitzer: " + str(guild.owner.mention) +
@@ -71,7 +71,7 @@ async def on_guild_join(guild):
 
 @client.event
 async def on_guild_remove(guild):
-    embed = discord.Embed(title=':x: Guild entfernt', color=0xe74c3c,
+    embed = discord.Embed(title=':x: Vom Server entfernt', color=0xe74c3c,
                           description="Server Name: " + str(guild.name) +
                                       "\nServer ID: " + str(guild.id) +
                                       "\nServer Besitzer: " + str(guild.owner.mention) +
@@ -90,6 +90,38 @@ async def on_guild_remove(guild):
 async def on_message(message):
     if isinstance(message.channel, discord.DMChannel):
         if message.author.id == client.AppInfo.owner.id:
+            if message.content.startswith(CONFIG.PREFIX + "sv-id"):
+                if len(message.content) == 25:
+                    serverID = message.content[7:25]
+                    if int(serverID) in CONFIG.AllowedServer:
+                        guildWithID = client.get_guild(int(serverID))
+                        if guildWithID.id in CONFIG.SupportLicenseServer:
+                            serverLicense = "Unterstützer Lizenz"
+                        elif guildWithID.id in CONFIG.AllowedServer:
+                            serverLicense = "Standard Lizenz"
+                        else:
+                            serverLicense = "Keine Lizenz"
+                        embed = discord.Embed(title=':white_check_mark: Server gefunden', color=0x2ecc71,
+                                              description="Server Name: " + str(guildWithID.name) +
+                                                          "\nServer ID: " + str(guildWithID.id) +
+                                                          "\nServer Besitzer: " + str(guildWithID.owner.mention) +
+                                                          "\nServer Region: " + str(guildWithID.region)+
+                                                          "\nLizenz: " + serverLicense)
+                        embed.add_field(name="Mitglieder", value=str(guildWithID.member_count) + " Mitglieder")
+                        CreateDateYear = str(guildWithID.created_at)[0:4]
+                        CreateDateMonth = str(guildWithID.created_at)[5:7]
+                        CreateDateDay = str(guildWithID.created_at)[8:10]
+                        CreateDateTime = str(guildWithID.created_at)[11:16]
+                        embed.add_field(name="Erstellt am",
+                                        value=CreateDateDay + "." + CreateDateMonth + "." + CreateDateYear + " um " + CreateDateTime + " Uhr")
+                        embed.set_thumbnail(url=guildWithID.icon_url)
+                        embed.timestamp = datetime.datetime.utcnow()
+                        await message.channel.send(embed=embed)
+                    else:
+                        await message.channel.send(":x: Dieser Server existiert nicht, oder ich bin auf diesem Server nicht autorisiert!")
+
+                elif len(message.content) != 25:
+                    await message.channel.send(":x: Bitte benutze **" + CONFIG.PREFIX + "sv-id [ServerID]**")
             if message.content.startswith(CONFIG.PREFIX + 'stop'):
                 if CONFIG.clientLogout == False:
                     embed = discord.Embed(title="", description="Der Bot wird deaktiviert...", color=0xe74c3c)
@@ -216,6 +248,14 @@ async def on_message(message):
                 if message.content.startswith(CONFIG.PREFIX + "ping"):
                     latency = str(client.latency)[0:4]
                     await message.channel.send("Bot Ping = " + latency + "ms")
+
+                if message.content.startswith(CONFIG.PREFIX + "invite"):
+                    embed = discord.Embed(title="", description="Hier kannst du mich zu deinem Server einladen:\n"
+                    "https://discordapp.com/oauth2/authorize?client_id=657169769589374977&scope=bot&permissions=67632230\n"
+                    "\nBedenke aber das du eine Lizenz brauchst. Lizenzen kannst du bei **" + client.AppInfo.owner.mention + "** kaufen.", color=0xffffff)
+                    embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
+                    embed.timestamp = datetime.datetime.utcnow()
+                    await message.author.send(embed=embed)
 
         else:
             if client.user.mentioned_in(message) and message.mention_everyone is False:
