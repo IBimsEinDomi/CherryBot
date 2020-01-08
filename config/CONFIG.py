@@ -1,6 +1,6 @@
 import discord
 
-TOKEN = "NjU3MTY5NzY5NTg5Mzc0OTc3.XftadQ.2Rwfpz3ni9gq3FkDPpDdLGEwvyc"
+TOKEN = "YOUR-TOKEN"
 PREFIX = "&"
 serverLicense = "Keine Lizenz"
 clientLogout = False
