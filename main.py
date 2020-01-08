@@ -7,7 +7,8 @@ from config import CONFIG
 from config.GAMES import __games__, __gamesTimer__
 
 client = discord.Client()
-__version__ = '0.3.3'
+__version__ = '0.3.4'
+__JoinPosition__ = "Noch nicht verfügbar"
 
 @client.event
 async def on_ready():
@@ -139,7 +140,7 @@ async def on_message(message):
                             embed = discord.Embed(title="",description=":x: Das geht nur, wenn der Bot deaktiviert ist", color=0xff0000)
                             await message.channel.send(embed=embed)
                     else:
-                        embed = discord.Embed(title="", description=":x: Hey, dafür hast du keine Rechte! ", color=0xff0000)
+                        embed = discord.Embed(title="", description=":x: Hey, dafür hast du keine Rechte!", color=0xff0000)
                         await message.channel.send(embed=embed)
 
             if CONFIG.clientLogout == False:
@@ -155,40 +156,34 @@ async def on_message(message):
                     embed.timestamp = datetime.datetime.utcnow()
                     await message.channel.send(embed=embed)
 
-                if message.content.startswith(CONFIG.PREFIX + 'noPerms'):
-                    embed = discord.Embed(title="", description=":x: Hey, dafür hast du keine Rechte!",color=0xff0000)
-                    await message.channel.send(embed=embed)
-
                 if message.content.startswith(CONFIG.PREFIX + 'Hallo'):
                     await message.channel.send('Hallo ' + message.author.mention)
 
                 if client.user.mentioned_in(message) and message.mention_everyone is False:
-                    await message.channel.send('Meine Prefix ist **&** ' + message.author.mention)
+                    await message.channel.send('Meine Prefix ist **' + CONFIG.PREFIX + '** ' + message.author.mention)
 
                 if message.content.startswith(CONFIG.PREFIX + "bot-info"):
                     client.AppInfo = await client.application_info()
                     embed = discord.Embed(title="Bot Informationen", description="Bot-Name: " + client.user.name + "\nBot-ID: " + str(client.user.id) + "\nDev Mode: " + client.dev + "\nDiscord Version: " + str(discord.__version__) +
-                    "\nBot Version: " + str(__version__) + "\nBot Developer: " + str(client.AppInfo.owner) + "\nBot-Sprache: :flag_de: German, Deutsch" + "\nPrefix: **&**", color=0x00ff00)
+                    "\nBot Version: " + str(__version__) + "\nBot Developer: " + str(client.AppInfo.owner.mention) + "\nBot-Sprache: :flag_de: German, Deutsch" + "\nPrefix: **&**", color=0xffffff)
                     embed.set_thumbnail(url=client.user.avatar_url)
-                    embed.set_footer(text="Server Patches", icon_url=client.user.avatar_url)
+                    embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp = datetime.datetime.utcnow()
                     await message.channel.send(embed=embed)
 
                 if message.content.startswith(CONFIG.PREFIX + 'set-patch'):
                     if message.author.id == 354191516979429376:
-                        embed = discord.Embed(title="", description="",color=0xff0000)
+                        embed = discord.Embed(title="", description=":x: Noch nicht Verfügbar",color=0xff0000)
                         await message.channel.send(embed=embed)
                     else:
-                        embed = discord.Embed(title="", description=":x: Hey, dafür hast du keine Rechte!",
-                                              color=0xff0000)
-                        embed.set_footer(text="Server Patches",
-                                         icon_url=client.user.avatar_url, )
-                        embed.timestamp = datetime.datetime.utcnow()
+                        embed = discord.Embed(title="", description=":x: Hey, dafür hast du keine Rechte!", color=0xff0000)
                         await message.channel.send(embed=embed)
 
                 if message.content.startswith(CONFIG.PREFIX + "sv-info"):
-                    if message.guild.id == 479691134482776066:
-                        serverLicense = "Supporter Lizenz"
+                    if message.guild.id in CONFIG.SupportLicense:
+                        serverLicense = "Unterstützer Lizenz"
+                    elif message.guild.id in CONFIG.AllowedServer:
+                        serverLicense = "Standard Lizenz"
                     else:
                         serverLicense = "Keine Lizenz"
                     client.AppInfo = await client.application_info()
@@ -210,10 +205,11 @@ async def on_message(message):
                      AuthorGuildJoinDate = str(message.author.joined_at)[8:10] + "." + str(message.author.joined_at)[5:7] + "." + str(message.author.joined_at)[0:4] + " um " + str(message.author.joined_at)[11:16] + " Uhr"
                      AuthorRegisterDate = str(message.author.created_at)[8:10] + "." + str(message.author.created_at)[5:7] + "." + str(message.author.created_at)[0:4] + " um " + str(message.author.created_at)[11:16] + " Uhr"
                      embed.add_field(name="Server beigetreten", value=AuthorGuildJoinDate)
-                     embed.add_field(name="Join Position", value="Zurzeit noch nicht verfügbar")
+
+                     embed.add_field(name="Join Position", value=str(__JoinPosition__))
                      embed.add_field(name="Registriert bei Discord", value=AuthorRegisterDate)
                      embed.set_thumbnail(url=message.author.avatar_url)
-                     embed.set_footer(text="Server Patches", icon_url=client.user.avatar_url)
+                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                      embed.timestamp = datetime.datetime.utcnow()
                      await message.channel.send(embed=embed)
 
@@ -226,7 +222,7 @@ async def on_message(message):
                 client.AppInfo = await client.application_info()
                 embed = discord.Embed(title="Keine Lizenz", description=":x: Hey, dieser Server hat keine Lizenz! "
                 "Für eine Lizenz wende dich\nbitte an " + client.AppInfo.owner.mention, color=0xff0000)
-                embed.set_footer(text="Server Patches", icon_url=client.user.avatar_url)
+                embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                 embed.timestamp = datetime.datetime.utcnow()
                 await message.channel.send(embed=embed)
 
