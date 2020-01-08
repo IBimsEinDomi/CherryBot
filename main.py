@@ -180,7 +180,7 @@ async def on_message(message):
                         await message.channel.send(embed=embed)
 
                 if message.content.startswith(CONFIG.PREFIX + "sv-info"):
-                    if message.guild.id in CONFIG.SupportLicense:
+                    if message.guild.id in CONFIG.SupportLicenseServer:
                         serverLicense = "Unterstützer Lizenz"
                     elif message.guild.id in CONFIG.AllowedServer:
                         serverLicense = "Standard Lizenz"
