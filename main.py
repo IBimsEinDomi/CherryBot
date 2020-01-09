@@ -72,7 +72,7 @@ async def _randomGame():
         memberCount = len(list(client.get_all_members()))
         randomGame = random.choice(__games__)
         await client.change_presence(activity=discord.Activity(type=randomGame[0], name=randomGame[1].format(guilds = guildCount, members = memberCount)))
-        await asyncio.sleep(__gamesTimer__)
+        await asyncio.sleep(random.choice(__gamesTimer__))
         if CONFIG.clientLogout == True:
             await client.change_presence(status=discord.Status.do_not_disturb, activity=discord.Game(name="Bot deaktiviert"))
             break
