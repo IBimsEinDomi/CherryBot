@@ -1,5 +1,6 @@
 import discord
 import datetime
+from pytz import timezone
 import traceback
 import random
 import asyncio
@@ -7,8 +8,7 @@ from config import CONFIG
 from config.GAMES import __games__, __gamesTimer__
 
 client = discord.Client()
-__version__ = '0.3.5'
-__JoinPosition__ = "Noch nicht verfügbar"
+__version__ = '0.3.6'
 
 @client.event
 async def on_ready():
@@ -24,6 +24,7 @@ async def on_ready():
     client.AppInfo = await client.application_info()
     print(f'Owner: {client.AppInfo.owner}')
 
+
 @client.event
 async def on_error(event, *args, **kwargs):
     if client.dev:
@@ -38,6 +39,7 @@ async def on_error(event, *args, **kwargs):
         except:
             pass
 
+
 @client.event
 async def _randomGame():
     while True:
@@ -49,6 +51,10 @@ async def _randomGame():
         if CONFIG.clientLogout == True:
             await client.change_presence(status=discord.Status.do_not_disturb, activity=discord.Game(name="Bot deaktiviert"))
             break
+
+
+def _currenttime():
+    return datetime.datetime.now(timezone('Europe/Berlin')).strftime('%H:%M:%S')
 
 
 @client.event
@@ -69,6 +75,7 @@ async def on_guild_join(guild):
     embed.timestamp = datetime.datetime.utcnow()
     await client.AppInfo.owner.send(embed=embed)
 
+
 @client.event
 async def on_guild_remove(guild):
     embed = discord.Embed(title=':x: Vom Server entfernt', color=0xe74c3c,
@@ -85,6 +92,7 @@ async def on_guild_remove(guild):
     embed.set_thumbnail(url=guild.icon_url)
     embed.timestamp = datetime.datetime.utcnow()
     await client.AppInfo.owner.send(embed=embed)
+
 
 @client.event
 async def on_message(message):
@@ -105,7 +113,7 @@ async def on_message(message):
                                               description="Server Name: " + str(guildWithID.name) +
                                                           "\nServer ID: " + str(guildWithID.id) +
                                                           "\nServer Besitzer: " + str(guildWithID.owner.mention) +
-                                                          "\nServer Region: " + str(guildWithID.region)+
+                                                          "\nServer Region: " + str(guildWithID.region) +
                                                           "\nLizenz: " + serverLicense)
                         embed.add_field(name="Mitglieder", value=str(guildWithID.member_count) + " Mitglieder")
                         CreateDateYear = str(guildWithID.created_at)[0:4]
@@ -118,7 +126,8 @@ async def on_message(message):
                         embed.timestamp = datetime.datetime.utcnow()
                         await message.channel.send(embed=embed)
                     else:
-                        await message.channel.send(":x: Dieser Server existiert nicht, oder ich bin auf diesem Server nicht autorisiert!")
+                        await message.channel.send(":x: Dieser Server existiert nicht, "
+                                                   "oder ich bin auf diesem Server nicht autorisiert!")
 
                 elif len(message.content) != 25:
                     await message.channel.send(":x: Bitte benutze **" + CONFIG.PREFIX + "sv-id [ServerID]**")
@@ -233,12 +242,18 @@ async def on_message(message):
                     await message.channel.send(embed=embed)
 
                 if message.content.startswith(CONFIG.PREFIX + "whois"):
+                     member = message.author
+                     __JoinPos__ = ""
+                     if member.joined_at is None:
+                         __JoinPos__ = "Could not locate your join date"
+                         return
+                     __JoinPos__ = sum(
+                         m.joined_at < member.joined_at for m in message.guild.members if m.joined_at is not None)
                      embed = discord.Embed(title="", description=str(message.author) + "\n" + message.author.mention, color=0xffffff)
                      AuthorGuildJoinDate = str(message.author.joined_at)[8:10] + "." + str(message.author.joined_at)[5:7] + "." + str(message.author.joined_at)[0:4] + " um " + str(message.author.joined_at)[11:16] + " Uhr"
                      AuthorRegisterDate = str(message.author.created_at)[8:10] + "." + str(message.author.created_at)[5:7] + "." + str(message.author.created_at)[0:4] + " um " + str(message.author.created_at)[11:16] + " Uhr"
                      embed.add_field(name="Server beigetreten", value=AuthorGuildJoinDate)
-
-                     embed.add_field(name="Join Position", value=str(__JoinPosition__))
+                     embed.add_field(name="Join Position", value="Du hast als **" + str(__JoinPos__) + ". Mitglied** denn Server betreten")
                      embed.add_field(name="Registriert bei Discord", value=AuthorRegisterDate)
                      embed.set_thumbnail(url=message.author.avatar_url)
                      embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
