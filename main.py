@@ -23,6 +23,7 @@ SOFTWARE.
 """
 
 import discord
+from discord.ext import commands
 import datetime
 from pytz import timezone
 import traceback
@@ -32,11 +33,11 @@ from config import CONFIG
 from config.GAMES import __games__, __gamesTimer__
 
 client = discord.Client()
-__version__ = '0.3.6'
+__version__ = '0.3.7'
 
 @client.event
 async def on_ready():
-    if client.user.id == 657169769589374977:
+    if client.user.id == 664831660235292714:
         client.dev = "Aktiviert"
     else:
         client.dev = "Deaktiviert"
@@ -175,7 +176,8 @@ async def on_message(message):
                     await message.channel.send(embed=embed)
         else:
             embed = discord.Embed(title="", description=":x: Hey, ich bin nur ein Bot und kann noch nicht darauf antworten", color=0xff0000)
-            await message.author.send(embed=embed)
+            if not message.author.bot:
+                await message.author.send(embed=embed)
 
     else:
         if message.guild.id in CONFIG.AllowedServer:
@@ -229,8 +231,9 @@ async def on_message(message):
 
                 if message.content.startswith(CONFIG.PREFIX + "bot-info"):
                     client.AppInfo = await client.application_info()
+                    latency = str(client.latency)[0:4]
                     embed = discord.Embed(title="Bot Informationen", description="Bot-Name: " + client.user.name + "\nBot-ID: " + str(client.user.id) + "\nDev Mode: " + client.dev + "\nDiscord Version: " + str(discord.__version__) +
-                    "\nBot Version: " + str(__version__) + "\nBot Developer: " + str(client.AppInfo.owner.mention) + "\nBot-Sprache: :flag_de: German, Deutsch" + "\nPrefix: **&**", color=0xffffff)
+                    "\nBot Version: " + str(__version__) + "\nPing: " + latency + "ms" + "\nPrefix: **&**" + "\nBot Developer: " + str(client.AppInfo.owner.mention) + "\nBot-Sprache: :flag_de: German, Deutsch", color=0xffffff)
                     embed.set_thumbnail(url=client.user.avatar_url)
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp = datetime.datetime.utcnow()
@@ -289,12 +292,14 @@ async def on_message(message):
                     await message.channel.send("Bot Ping = " + latency + "ms")
 
                 if message.content.startswith(CONFIG.PREFIX + "invite"):
+                    await message.channel.send(message.author.mention + ", der Einladungslink wurde dir zugeschickt.")
                     embed = discord.Embed(title="", description="Hier kannst du mich zu deinem Server einladen:\n"
-                    "https://discordapp.com/oauth2/authorize?client_id=657169769589374977&scope=bot&permissions=67632230\n"
+                    "https://discordapp.com/oauth2/authorize?client_id=664831660235292714&scope=bot&permissions=67632230\n"
                     "\nBedenke aber das du eine Lizenz brauchst. Lizenzen kannst du bei **" + client.AppInfo.owner.mention + "** kaufen.", color=0xffffff)
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp = datetime.datetime.utcnow()
-                    await message.author.send(embed=embed)
+                    if not message.author.bot:
+                        await message.author.send(embed=embed)
 
         else:
             if client.user.mentioned_in(message) and message.mention_everyone is False:
