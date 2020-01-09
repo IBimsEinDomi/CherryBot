@@ -30,4 +30,9 @@ __games__ = [
     (discord.ActivityType.watching, 'über {members} Mitglieder'),
     (discord.ActivityType.listening, '&bot-info')
 ]
-__gamesTimer__ = 2 * 60
+__gamesTimer__ = [
+    2 * 60,
+    1 * 35,
+    2 * 27,
+    3 * 23
+]
