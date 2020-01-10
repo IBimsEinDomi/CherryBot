@@ -33,7 +33,7 @@ from config import CONFIG
 from config.GAMES import __games__, __gamesTimer__
 
 client = discord.Client()
-__version__ = '0.3.7'
+__version__ = '0.3.8'
 
 @client.event
 async def on_ready():
@@ -227,7 +227,8 @@ async def on_message(message):
                     await message.channel.send('Hallo ' + message.author.mention)
 
                 if client.user.mentioned_in(message) and message.mention_everyone is False:
-                    await message.channel.send('Meine Prefix ist **' + CONFIG.PREFIX + '** ' + message.author.mention)
+                    if not message.author.bot:
+                        await message.channel.send('Meine Prefix ist **' + CONFIG.PREFIX + '** ' + message.author.mention)
 
                 if message.content.startswith(CONFIG.PREFIX + "bot-info"):
                     client.AppInfo = await client.application_info()
