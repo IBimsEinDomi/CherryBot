@@ -31,9 +31,11 @@ import random
 import asyncio
 from config import CONFIG
 from config.GAMES import __games__, __gamesTimer__
+import codecs
 
 client = discord.Client()
-__version__ = '0.3.8'
+__version__ = '0.3.9'
+mit_license = codecs.open(".\config\MIT_license", "r", encoding="utf-8")
 
 
 @client.event
@@ -221,8 +223,7 @@ async def on_message(message):
                      "Wir haben die Verlassen Nachrichten deaktiviert & die Privaten Nachrichten beim Beitritt unseres Servers aktiviert."
                     "Da viele sich beim Beitritt die Nachricht in <#649178318674984960> nicht durchlesen, wo alles erklärt ist wie ihr die benötigten Rechte "
                     "bekommt mit der dazugehörigen Rolle. Werden wir diese Nachricht künftig auch privat schicken lassen. ", inline=False)
-                    embed.set_footer(text="Server News von Thundercraft",
-                    icon_url=client.user.avatar_url,)
+                    embed.set_footer(text="Server News von Thundercraft", icon_url=client.user.avatar_url,)
                     embed.set_thumbnail(url=message.guild.icon_url)
                     embed.timestamp = datetime.datetime.utcnow()
                     await message.channel.send(embed=embed)
@@ -305,6 +306,15 @@ async def on_message(message):
                     embed.timestamp = datetime.datetime.utcnow()
                     if not message.author.bot:
                         await message.author.send(embed=embed)
+
+                if message.content.startswith(CONFIG.PREFIX + "src"):
+                    embed = discord.Embed(title="", description="Hier findest du meinen Source Code:"
+                    "\nhttps://github.com/IBimsEinMystery/ServerPatches"
+                    "\n\n**Dieser Source Code steht unter Lizenz:**"
+                    "\n```" + mit_license.read() + "```", color=0xffffff)
+                    embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
+                    embed.timestamp = datetime.datetime.utcnow()
+                    await message.channel.send(embed=embed)
 
         else:
             if client.user.mentioned_in(message) and message.mention_everyone is False:
