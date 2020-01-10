@@ -34,7 +34,7 @@ from config.GAMES import __games__, __gamesTimer__
 import codecs
 
 client = discord.Client()
-__version__ = '0.3.9'
+__version__ = '0.3.9.1'
 mit_license = codecs.open(".\config\MIT_license", "r", encoding="utf-8")
 
 
@@ -217,7 +217,7 @@ async def on_message(message):
                         await message.channel.send(embed=embed)
 
             if CONFIG.clientLogout == False:
-                if message.content.startswith(CONFIG.PREFIX + 'sv-patch'):
+                if message.content.startswith(CONFIG.PREFIX + 'sv-news'):
                     embed = discord.Embed(title="", description="", color=0x00ff00)
                     embed.add_field(name="Neuigkeiten", value="Hey, @here!\n"
                      "Wir haben die Verlassen Nachrichten deaktiviert & die Privaten Nachrichten beim Beitritt unseres Servers aktiviert."
