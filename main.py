@@ -35,6 +35,7 @@ from config.GAMES import __games__, __gamesTimer__
 client = discord.Client()
 __version__ = '0.3.8'
 
+
 @client.event
 async def on_ready():
     if client.user.id == 664831660235292714:
@@ -126,36 +127,39 @@ async def on_message(message):
             if message.content.startswith(CONFIG.PREFIX + "sv-id"):
                 if len(message.content) == 25:
                     serverID = message.content[7:25]
-                    if int(serverID) in CONFIG.AllowedServer:
-                        guildWithID = client.get_guild(int(serverID))
-                        if guildWithID.id in CONFIG.SupportLicenseServer:
-                            serverLicense = "Unterstützer Lizenz"
-                        elif guildWithID.id in CONFIG.AllowedServer:
-                            serverLicense = "Standard Lizenz"
+                    if str.isdigit(serverID):
+                        if client.get_guild(int(serverID)):
+                            guildWithID = client.get_guild(int(serverID))
+                            if guildWithID.id in CONFIG.SupportLicenseServer:
+                                serverLicense = "Unterstützer Lizenz"
+                            elif guildWithID.id in CONFIG.AllowedServer:
+                                serverLicense = "Standard Lizenz"
+                            else:
+                                serverLicense = "Keine Lizenz"
+                            embed = discord.Embed(title=':white_check_mark: Server gefunden', color=0x2ecc71,
+                                                  description="Server Name: " + str(guildWithID.name) +
+                                                              "\nServer ID: " + str(guildWithID.id) +
+                                                              "\nServer Besitzer: " + str(guildWithID.owner.mention) +
+                                                              "\nServer Region: " + str(guildWithID.region) +
+                                                              "\nLizenz: " + serverLicense)
+                            embed.add_field(name="Mitglieder", value=str(guildWithID.member_count) + " Mitglieder")
+                            CreateDateYear = str(guildWithID.created_at)[0:4]
+                            CreateDateMonth = str(guildWithID.created_at)[5:7]
+                            CreateDateDay = str(guildWithID.created_at)[8:10]
+                            CreateDateTime = str(guildWithID.created_at)[11:16]
+                            embed.add_field(name="Erstellt am",
+                                            value=CreateDateDay + "." + CreateDateMonth + "." + CreateDateYear + " um " + CreateDateTime + " Uhr")
+                            embed.set_thumbnail(url=guildWithID.icon_url)
+                            embed.timestamp = datetime.datetime.utcnow()
+                            await message.channel.send(embed=embed)
                         else:
-                            serverLicense = "Keine Lizenz"
-                        embed = discord.Embed(title=':white_check_mark: Server gefunden', color=0x2ecc71,
-                                              description="Server Name: " + str(guildWithID.name) +
-                                                          "\nServer ID: " + str(guildWithID.id) +
-                                                          "\nServer Besitzer: " + str(guildWithID.owner.mention) +
-                                                          "\nServer Region: " + str(guildWithID.region) +
-                                                          "\nLizenz: " + serverLicense)
-                        embed.add_field(name="Mitglieder", value=str(guildWithID.member_count) + " Mitglieder")
-                        CreateDateYear = str(guildWithID.created_at)[0:4]
-                        CreateDateMonth = str(guildWithID.created_at)[5:7]
-                        CreateDateDay = str(guildWithID.created_at)[8:10]
-                        CreateDateTime = str(guildWithID.created_at)[11:16]
-                        embed.add_field(name="Erstellt am",
-                                        value=CreateDateDay + "." + CreateDateMonth + "." + CreateDateYear + " um " + CreateDateTime + " Uhr")
-                        embed.set_thumbnail(url=guildWithID.icon_url)
-                        embed.timestamp = datetime.datetime.utcnow()
-                        await message.channel.send(embed=embed)
+                            await message.channel.send(":x: Dieser Server existiert nicht, "
+                                                       "oder ich bin auf diesem Server nicht autorisiert!")
                     else:
-                        await message.channel.send(":x: Dieser Server existiert nicht, "
-                                                   "oder ich bin auf diesem Server nicht autorisiert!")
-
+                        await message.channel.send(":x: Bitte benutze **" + CONFIG.PREFIX + "sv-id [ServerID]**")
                 elif len(message.content) != 25:
                     await message.channel.send(":x: Bitte benutze **" + CONFIG.PREFIX + "sv-id [ServerID]**")
+
             if message.content.startswith(CONFIG.PREFIX + 'stop'):
                 if CONFIG.clientLogout == False:
                     embed = discord.Embed(title="", description="Der Bot wird deaktiviert...", color=0xe74c3c)
