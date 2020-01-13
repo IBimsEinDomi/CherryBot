@@ -34,7 +34,7 @@ from config.GAMES import __games__, __gamesTimer__
 import codecs
 
 client = discord.Client()
-__version__ = '0.4.1'
+__version__ = '0.4.1.2'
 mit_license = codecs.open(".\config\MIT_license", "r", encoding="utf-8")
 
 
@@ -277,8 +277,9 @@ async def on_message(message):
 
                 if client.user.mentioned_in(message) and message.mention_everyone is False:
                     if not message.author.bot:
-                        await message.channel.send(
-                            'Meine Prefix ist **' + CONFIG.PREFIX + '** ' + message.author.mention)
+                        if not message.content.startswith((CONFIG).PREFIX + "whois"):
+                            await message.channel.send(
+                                'Meine Prefix ist **' + CONFIG.PREFIX + '** ' + message.author.mention)
 
                 if message.content.startswith(CONFIG.PREFIX + "bot-info"):
                     client.AppInfo = await client.application_info()
@@ -339,12 +340,11 @@ async def on_message(message):
                     __JoinPos__ = sum(
                         m.joined_at < member.joined_at for m in message.guild.members if m.joined_at is not None)
 
-                    AuthorGuildJoinDate = str(message.author.joined_at)[8:10] + "." + str(message.author.joined_at)[
+                    AuthorGuildJoinDate = str(member.joined_at)[8:10] + "." + str(member.joined_at)[
                                                                                       5:7] + "." + str(
-                        message.author.joined_at)[0:4] + " um " + str(message.author.joined_at)[11:16] + " Uhr"
-                    AuthorRegisterDate = str(message.author.created_at)[8:10] + "." + str(message.author.created_at)[
-                                                                                      5:7] + "." + str(
-                        message.author.created_at)[0:4] + " um " + str(message.author.created_at)[11:16] + " Uhr"
+                        member.joined_at)[0:4] + " um " + str(member.joined_at)[11:16] + " Uhr"
+                    AuthorRegisterDate = str(member.created_at)[8:10] + "." + str(member.created_at)[5:7] + "."\
+                                         + str(member.created_at)[0:4] + " um " + str(member.created_at)[11:16] + " Uhr"
 
                     role_name = [role.mention for role in member.roles]
                     role_list = ', '.join(role_name)
