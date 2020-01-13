@@ -244,37 +244,32 @@ async def on_message(message):
                         await message.channel.send(":x: Es wurde keine Nachricht eingestellt!")
 
                 if message.content.startswith(CONFIG.PREFIX + 'set-patch'):
-                    if message.member.permissions.has("ADMINISTRATOR"):
-                        if len(message.content) == 48:
-                            channelID = message.content[11:29]
-                            messageID = message.content[30:48]
-                            if str.isdigit(channelID) & str.isdigit(messageID):
-                                if message.guild.get_channel(int(channelID)):
+                    if len(message.content) == 48:
+                        channelID = message.content[11:29]
+                        messageID = message.content[30:48]
+                        if str.isdigit(channelID) & str.isdigit(messageID):
+                            if message.guild.get_channel(int(channelID)):
+                                try:
+                                    await message.guild.get_channel(int(channelID)).fetch_message(int(messageID))
                                     try:
-                                        await message.guild.get_channel(int(channelID)).fetch_message(int(messageID))
+                                        sv_news = open(".\config\SV_NEWS.py", "a")
                                         try:
-                                            sv_news = open(".\config\SV_NEWS.py", "a")
-                                            try:
-                                                sv_news.write("\n" + str(message.guild.id) + " :" + '"' + str(channelID) + "(" + str(messageID) + ")" + '"')
-                                                sv_news.close()
-                                                await message.channel.send(":white_check_mark: Erfolgreich gesetzt")
-                                            except:
-                                                await message.channel.send(":x: Konfig konnte nicht gespeichert werden!")
+                                            sv_news.write("\n" + str(message.guild.id) + " :" + '"' + str(channelID) + "(" + str(messageID) + ")" + '"')
+                                            sv_news.close()
+                                            await message.channel.send(":white_check_mark: Erfolgreich gesetzt")
                                         except:
-                                            await message.channel.send(":x: Datei wurde nicht gefunden!")
+                                            await message.channel.send(":x: Konfig konnte nicht gespeichert werden!")
                                     except:
-                                        await message.channel.send(":x: Die Nachrichten-ID ist ungültig!")
-                                else:
-                                    await message.channel.send(":x: Die Kanal-ID ist ungültig!")
+                                        await message.channel.send(":x: Datei wurde nicht gefunden!")
+                                except:
+                                    await message.channel.send(":x: Die Nachrichten-ID ist ungültig!")
                             else:
-                                await message.channel.send(
-                                    ":x: Bitte benutze **" + CONFIG.PREFIX + "set-patch [Kanal-ID] [Nachrichten-ID]**")
+                                await message.channel.send(":x: Die Kanal-ID ist ungültig!")
                         else:
                             await message.channel.send(
                                 ":x: Bitte benutze **" + CONFIG.PREFIX + "set-patch [Kanal-ID] [Nachrichten-ID]**")
                     else:
-                        embed = discord.Embed(title="", description=":x: Hey, dafür hast du keine Rechte!",
-                                              color=0xff0000)
+                        await message.channel.send(":x: Bitte benutze **" + CONFIG.PREFIX + "set-patch [Kanal-ID] [Nachrichten-ID]**")
                         await message.channel.send(embed=embed)
 
                 if message.content.startswith(CONFIG.PREFIX + 'Hallo'):
