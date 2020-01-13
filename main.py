@@ -34,9 +34,8 @@ from config.GAMES import __games__, __gamesTimer__
 import codecs
 
 client = discord.Client()
-__version__ = '0.4'
+__version__ = '0.4.1'
 mit_license = codecs.open(".\config\MIT_license", "r", encoding="utf-8")
-sv_news = open(".\config\SV_NEWS.py", "a")
 
 
 @client.event
@@ -129,6 +128,7 @@ async def on_guild_remove(guild):
 
 @client.event
 async def on_message(message):
+    global member
     if isinstance(message.channel, discord.DMChannel):
         if message.author.id == client.AppInfo.owner.id:
             if message.content.startswith(CONFIG.PREFIX + "sv-id"):
@@ -244,7 +244,7 @@ async def on_message(message):
                         await message.channel.send(":x: Es wurde keine Nachricht eingestellt!")
 
                 if message.content.startswith(CONFIG.PREFIX + 'set-patch'):
-                    if message.author.id == 354191516979429376:
+                    if message.member.permissions.has("ADMINISTRATOR"):
                         if len(message.content) == 48:
                             channelID = message.content[11:29]
                             messageID = message.content[30:48]
@@ -253,11 +253,15 @@ async def on_message(message):
                                     try:
                                         await message.guild.get_channel(int(channelID)).fetch_message(int(messageID))
                                         try:
-                                            sv_news.write(str(message.guild.id) + " :" + '"' + str(channelID) + "(" + str(messageID) + ")" + '"')
-                                            sv_news.close()
-                                            await message.channel.send(":white_check_mark: Erfolgreich gesetzt")
+                                            sv_news = open(".\config\SV_NEWS.py", "a")
+                                            try:
+                                                sv_news.write("\n" + str(message.guild.id) + " :" + '"' + str(channelID) + "(" + str(messageID) + ")" + '"')
+                                                sv_news.close()
+                                                await message.channel.send(":white_check_mark: Erfolgreich gesetzt")
+                                            except:
+                                                await message.channel.send(":x: Konfig konnte nicht gespeichert werden!")
                                         except:
-                                            await message.channel.send(":x: Konfig konnte nicht gespeichert werden!")
+                                            await message.channel.send(":x: Datei wurde nicht gefunden!")
                                     except:
                                         await message.channel.send(":x: Die Nachrichten-ID ist ungültig!")
                                 else:
@@ -324,28 +328,41 @@ async def on_message(message):
                     await message.channel.send(embed=embed)
 
                 if message.content.startswith(CONFIG.PREFIX + "whois"):
-                    member = message.author
+                    if len(message.content) == 6:
+                        member = message.author
+                    try:
+                        if not len(message.content) == 6:
+                            member = message.mentions[0]
+                    except:
+                        await message.channel.send(":x: Bitte benutze **" + CONFIG.PREFIX + "whois <@User#1234>**")
+                        return
+
                     __JoinPos__ = ""
                     if member.joined_at is None:
                         __JoinPos__ = "Ich konnte dein Beitrittdatum nicht feststellen"
                         return
                     __JoinPos__ = sum(
                         m.joined_at < member.joined_at for m in message.guild.members if m.joined_at is not None)
-                    embed = discord.Embed(title="", description=str(message.author) + "\n" + message.author.mention,
-                                          color=0xffffff)
+
                     AuthorGuildJoinDate = str(message.author.joined_at)[8:10] + "." + str(message.author.joined_at)[
                                                                                       5:7] + "." + str(
                         message.author.joined_at)[0:4] + " um " + str(message.author.joined_at)[11:16] + " Uhr"
                     AuthorRegisterDate = str(message.author.created_at)[8:10] + "." + str(message.author.created_at)[
                                                                                       5:7] + "." + str(
                         message.author.created_at)[0:4] + " um " + str(message.author.created_at)[11:16] + " Uhr"
-                    embed.add_field(name="Server beigetreten", value=AuthorGuildJoinDate)
-                    embed.add_field(name="Join Position",
-                                    value="Du hast als **" + str(__JoinPos__) + ". Mitglied** denn Server betreten")
-                    embed.add_field(name="Registriert bei Discord", value=AuthorRegisterDate)
-                    embed.set_thumbnail(url=message.author.avatar_url)
+
+                    role_name = [role.mention for role in member.roles]
+                    role_list = ', '.join(role_name)
+                    embed = discord.Embed(title="", description="Name: " + str(member.mention) +
+                                                                "\nID: " + str(member.id) +
+                                                                "\nBeigetreten: " + str(AuthorGuildJoinDate) +
+                                                                "\nJoin Position: " + str(__JoinPos__) +
+                                                                "\nRegistriert: " + str(AuthorRegisterDate) +
+                                                                f'\nRollen: {role_list[24:]}', color=0xffffff)
+                    embed.set_thumbnail(url=member.avatar_url)
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp = datetime.datetime.utcnow()
+                    embed.set_author(name=member, icon_url=member.avatar_url)
                     await message.channel.send(embed=embed)
 
                 if message.content.startswith(CONFIG.PREFIX + "ping"):
