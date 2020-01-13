@@ -34,7 +34,7 @@ from config.GAMES import __games__, __gamesTimer__
 import codecs
 
 client = discord.Client()
-__version__ = '0.4.1.2'
+__version__ = '0.4.2'
 mit_license = codecs.open(".\config\MIT_license", "r", encoding="utf-8")
 
 
@@ -128,7 +128,6 @@ async def on_guild_remove(guild):
 
 @client.event
 async def on_message(message):
-    global member
     if isinstance(message.channel, discord.DMChannel):
         if message.author.id == client.AppInfo.owner.id:
             if message.content.startswith(CONFIG.PREFIX + "sv-id"):
@@ -270,7 +269,6 @@ async def on_message(message):
                                 ":x: Bitte benutze **" + CONFIG.PREFIX + "set-patch [Kanal-ID] [Nachrichten-ID]**")
                     else:
                         await message.channel.send(":x: Bitte benutze **" + CONFIG.PREFIX + "set-patch [Kanal-ID] [Nachrichten-ID]**")
-                        await message.channel.send(embed=embed)
 
                 if message.content.startswith(CONFIG.PREFIX + 'Hallo'):
                     await message.channel.send('Hallo ' + message.author.mention)
@@ -353,7 +351,8 @@ async def on_message(message):
                                                                 "\nBeigetreten: " + str(AuthorGuildJoinDate) +
                                                                 "\nJoin Position: " + str(__JoinPos__) +
                                                                 "\nRegistriert: " + str(AuthorRegisterDate) +
-                                                                f'\nRollen: {role_list[24:]}', color=0xffffff)
+                                                                f'\nRollen: {role_list[24:]}' +
+                                                                f' \nBerechtigungen: :x:', color=0xffffff)
                     embed.set_thumbnail(url=member.avatar_url)
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp = datetime.datetime.utcnow()
@@ -383,6 +382,27 @@ async def on_message(message):
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp = datetime.datetime.utcnow()
                     await message.channel.send(embed=embed)
+
+                if message.content.startswith(CONFIG.PREFIX + "kick"):
+                    if message.author.guild_permissions.kick_members:
+                        try:
+                            member = message.mentions[0]
+                            try:
+                                if not message.guild.owner in message.mentions:
+                                    try:
+                                        await member.kick(reason=None)
+                                        await message.channel.send(":white_check_mark: Du hast **" + str(member) + "** gekickt")
+                                    except:
+                                        await message.channel.send(":x: Ich darf das nicht!")
+                                else:
+                                    await message.channel.send(":x: Du kannst denn Besitzer dieses Servers nicht kicken!")
+                            except:
+                                await message.channel.send(":x: Du kannst denn Besitzer dieses Servers nicht kicken!")
+                        except:
+                            await message.channel.send(":x: Bitte benutze **" + CONFIG.PREFIX + "kick [@User#1234]**!")
+                    else:
+                        await message.channel.send(":x: Keine Rechte!")
+
 
         else:
             if client.user.mentioned_in(message) and message.mention_everyone is False:
