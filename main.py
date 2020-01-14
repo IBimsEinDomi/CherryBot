@@ -34,7 +34,7 @@ from config.GAMES import __games__, __gamesTimer__
 import codecs
 
 client = discord.Client()
-__version__ = '0.4.2'
+__version__ = '0.4.3'
 mit_license = codecs.open(".\config\MIT_license", "r", encoding="utf-8")
 
 
@@ -337,22 +337,52 @@ async def on_message(message):
                         return
                     __JoinPos__ = sum(
                         m.joined_at < member.joined_at for m in message.guild.members if m.joined_at is not None)
+                    if __JoinPos__ == 0:
+                        __JoinPos__ = "Besitzer"
 
-                    AuthorGuildJoinDate = str(member.joined_at)[8:10] + "." + str(member.joined_at)[
-                                                                                      5:7] + "." + str(
+                    AuthorGuildJoinDate = str(member.joined_at)[8:10] + "." + str(member.joined_at)[5:7] + "." + str(
                         member.joined_at)[0:4] + " um " + str(member.joined_at)[11:16] + " Uhr"
-                    AuthorRegisterDate = str(member.created_at)[8:10] + "." + str(member.created_at)[5:7] + "."\
-                                         + str(member.created_at)[0:4] + " um " + str(member.created_at)[11:16] + " Uhr"
+                    AuthorRegisterDate = str(member.created_at)[8:10] + "." + str(member.created_at)[5:7] + "." + str(
+                        member.created_at)[0:4] + " um " + str(member.created_at)[11:16] + " Uhr"
 
                     role_name = [role.mention for role in member.roles]
-                    role_list = ', '.join(role_name)
+                    role_list = ', '.join(role_name)[24:]
+                    role_amount = role_list.count("@")
+                    if len(role_list) <= 25:
+                        role_list = "\n:x: Keine Rollen auf dem Server"
+
+                    __AllPerms = ""
+                    if member.guild_permissions.administrator:
+                        __AllPerms += "Administrator, "
+                    if member.guild_permissions.manage_guild:
+                        __AllPerms += "Server verwalten, "
+                    if member.guild_permissions.manage_webhooks:
+                        __AllPerms += "Webhooks verwalten, "
+                    if member.guild_permissions.manage_roles:
+                        __AllPerms += "Rollen verwalten, "
+                    if member.guild_permissions.manage_emojis:
+                        __AllPerms += "Emojis verwalten, "
+                    if member.guild_permissions.manage_channels:
+                        __AllPerms += "Kanäle verwalten, "
+                    if member.guild_permissions.manage_messages:
+                        __AllPerms += "Nachrichten verwalten, "
+                    if member.guild_permissions.ban_members:
+                        __AllPerms += "Mitglieder bannen, "
+                    if member.guild_permissions.kick_members:
+                        __AllPerms += "Mitglieder kicken, "
+                    if member.guild_permissions.manage_nicknames:
+                        __AllPerms += "Nicknamen verwalten, "
+                    if member.guild_permissions.change_nickname:
+                        __AllPerms += "Nicknamen ändern"
+                    if __AllPerms == "":
+                        __AllPerms = ":x: Keine Rechte auf dem Server"
                     embed = discord.Embed(title="", description="Name: " + str(member.mention) +
                                                                 "\nID: " + str(member.id) +
                                                                 "\nBeigetreten: " + str(AuthorGuildJoinDate) +
                                                                 "\nJoin Position: " + str(__JoinPos__) +
                                                                 "\nRegistriert: " + str(AuthorRegisterDate) +
-                                                                f'\nRollen: {role_list[24:]}' +
-                                                                f' \nBerechtigungen: :x:', color=0xffffff)
+                                                                f'\nRollen [{role_amount}]: {role_list}' +
+                                                                f' \nBerechtigungen: \n{__AllPerms}', color=0xffffff)
                     embed.set_thumbnail(url=member.avatar_url)
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp = datetime.datetime.utcnow()
