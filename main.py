@@ -34,7 +34,7 @@ from config.GAMES import __games__, __gamesTimer__
 import codecs
 
 client = discord.Client()
-__version__ = '0.4.3'
+__version__ = '0.4.4'
 mit_license = codecs.open(".\config\MIT_license", "r", encoding="utf-8")
 
 
@@ -242,7 +242,7 @@ async def on_message(message):
                     else:
                         await message.channel.send(":x: Es wurde keine Nachricht eingestellt!")
 
-                if message.content.startswith(CONFIG.PREFIX + 'set-patch'):
+                if message.content.startswith(CONFIG.PREFIX + 'set-news'):
                     if len(message.content) == 48:
                         channelID = message.content[11:29]
                         messageID = message.content[30:48]
@@ -269,15 +269,6 @@ async def on_message(message):
                                 ":x: Bitte benutze **" + CONFIG.PREFIX + "set-patch [Kanal-ID] [Nachrichten-ID]**")
                     else:
                         await message.channel.send(":x: Bitte benutze **" + CONFIG.PREFIX + "set-patch [Kanal-ID] [Nachrichten-ID]**")
-
-                if message.content.startswith(CONFIG.PREFIX + 'Hallo'):
-                    await message.channel.send('Hallo ' + message.author.mention)
-
-                if client.user.mentioned_in(message) and message.mention_everyone is False:
-                    if not message.author.bot:
-                        if not message.content.startswith((CONFIG).PREFIX + "whois"):
-                            await message.channel.send(
-                                'Meine Prefix ist **' + CONFIG.PREFIX + '** ' + message.author.mention)
 
                 if message.content.startswith(CONFIG.PREFIX + "bot-info"):
                     client.AppInfo = await client.application_info()
@@ -406,7 +397,7 @@ async def on_message(message):
 
                 if message.content.startswith(CONFIG.PREFIX + "src"):
                     embed = discord.Embed(title="", description="Hier findest du meinen Source Code:"
-                                                                "\nhttps://github.com/IBimsEinMystery/ServerPatches"
+                                                                "\nhttps://github.com/IBimsEinMystery/ServerMod"
                                                                 "\n\n**Dieser Source Code steht unter Lizenz:**"
                                                                 "\n```" + mit_license.read() + "```", color=0xffffff)
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
@@ -418,20 +409,56 @@ async def on_message(message):
                         try:
                             member = message.mentions[0]
                             try:
-                                if not message.guild.owner in message.mentions:
+                                if not client.user.mentioned_in(member):
                                     try:
-                                        await member.kick(reason=None)
-                                        await message.channel.send(":white_check_mark: Du hast **" + str(member) + "** gekickt")
+                                        if not message.guild.owner in message.mentions:
+                                            try:
+                                                await member.kick(reason=None)
+                                                await message.channel.send(":white_check_mark: Du hast **" + str(member) + "** gekickt")
+                                            except:
+                                                await message.channel.send(":x: Ich darf das nicht!")
+                                        else:
+                                            await message.channel.send(":x: Du kannst denn Besitzer dieses Servers nicht kicken!")
                                     except:
-                                        await message.channel.send(":x: Ich darf das nicht!")
+                                        await message.channel.send(":x: Du kannst denn Besitzer dieses Servers nicht kicken!")
                                 else:
-                                    await message.channel.send(":x: Du kannst denn Besitzer dieses Servers nicht kicken!")
+                                    await message.channel.send(":x: Ich kann mich nicht selber kicken!")
                             except:
-                                await message.channel.send(":x: Du kannst denn Besitzer dieses Servers nicht kicken!")
+                                await message.channel.send(":x: Ich kann mich nicht selber kicken!")
                         except:
                             await message.channel.send(":x: Bitte benutze **" + CONFIG.PREFIX + "kick [@User#1234]**!")
                     else:
                         await message.channel.send(":x: Keine Rechte!")
+
+            if client.user.mentioned_in(message) and message.mention_everyone is False:
+                if not message.author.bot:
+                    if message.content.startswith((CONFIG).PREFIX + "stop"):
+                        return
+                    if message.content.startswith((CONFIG).PREFIX + "login"):
+                        return
+                    if message.content.startswith((CONFIG).PREFIX + "sv-news"):
+                        return
+                    if message.content.startswith((CONFIG).PREFIX + "set-news"):
+                        return
+                    if message.content.startswith((CONFIG).PREFIX + "bot-info"):
+                        return
+                    if message.content.startswith((CONFIG).PREFIX + "sv-info"):
+                        return
+                    if message.content.startswith((CONFIG).PREFIX + "whois"):
+                        return
+                    if message.content.startswith((CONFIG).PREFIX + "ping"):
+                        return
+                    if message.content.startswith((CONFIG).PREFIX + "invite"):
+                        return
+                    if message.content.startswith((CONFIG).PREFIX + "src"):
+                        return
+                    if message.content.startswith((CONFIG).PREFIX + "kick"):
+                        return
+                    if message.content.startswith("Hallo"):
+                        await message.channel.send('Hallo ' + message.author.mention)
+                        return
+                    else:
+                        await message.channel.send('Meine Prefix ist **' + CONFIG.PREFIX + '** ' + message.author.mention)
 
 
         else:
