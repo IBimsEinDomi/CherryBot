@@ -34,7 +34,7 @@ from config.GAMES import __games__, __gamesTimer__
 import codecs
 
 client = discord.Client()
-__version__ = '0.4.5'
+__version__ = '0.4.5.1'
 mit_license = codecs.open(".\config\MIT_license", "r", encoding="utf-8")
 
 
@@ -157,40 +157,54 @@ async def on_message(message):
                                             value=CreateDateDay + "." + CreateDateMonth + "." + CreateDateYear + " um " + CreateDateTime + " Uhr")
                             embed.set_thumbnail(url=guildWithID.icon_url)
                             embed.timestamp = datetime.datetime.utcnow()
+                            await message.channel.trigger_typing()
+                            await asyncio.sleep(0.5)
                             await message.channel.send(embed=embed)
                         else:
+                            await message.channel.trigger_typing()
+                            await asyncio.sleep(0.5)
                             await message.channel.send(":x: Dieser Server existiert nicht, "
                                                        "oder ich bin auf diesem Server nicht autorisiert!")
                     else:
+                        await message.channel.trigger_typing()
+                        await asyncio.sleep(0.5)
                         await message.channel.send(":x: Bitte benutze **" + CONFIG.PREFIX + "sv-id [ServerID]**")
                 elif len(message.content) != 25:
+                    await message.channel.trigger_typing()
+                    await asyncio.sleep(0.5)
                     await message.channel.send(":x: Bitte benutze **" + CONFIG.PREFIX + "sv-id [ServerID]**")
 
             if message.content.startswith(CONFIG.PREFIX + 'stop'):
                 if CONFIG.clientLogout == False:
                     embed = discord.Embed(title="", description="Der Bot wird deaktiviert...", color=0xe74c3c)
-                    await client.change_presence(status=discord.Status.do_not_disturb,
-                                                 activity=discord.Game(name="Bot deaktiviert"))
+                    await client.change_presence(status=discord.Status.do_not_disturb, activity=discord.Game(name="Bot deaktiviert"))
+                    await message.channel.trigger_typing()
+                    await asyncio.sleep(0.5)
                     await message.channel.send(embed=embed)
                     CONFIG.clientLogout = True
                 else:
                     embed = discord.Embed(title="", description=":x: Der Bot ist schon deaktiviert", color=0xff0000)
+                    await message.channel.trigger_typing()
+                    await asyncio.sleep(0.5)
                     await message.channel.send(embed=embed)
             if message.content.startswith(CONFIG.PREFIX + 'login'):
                 if CONFIG.clientLogout == True:
                     embed = discord.Embed(title="", description="Der Bot wird aktiviert...", color=0x2ecc71)
                     client.gamesLoop = asyncio.ensure_future(_randomGame())
+                    await message.channel.trigger_typing()
+                    await asyncio.sleep(0.5)
                     await message.channel.send(embed=embed)
                     CONFIG.clientLogout = False
                 else:
-                    embed = discord.Embed(title="", description=":x: Das geht nur, wenn der Bot deaktiviert ist",
-                                          color=0xff0000)
+                    embed = discord.Embed(title="", description=":x: Das geht nur, wenn der Bot deaktiviert ist", color=0xff0000)
+                    await message.channel.trigger_typing()
+                    await asyncio.sleep(0.5)
                     await message.channel.send(embed=embed)
         else:
-            embed = discord.Embed(title="",
-                                  description=":x: Hey, ich bin nur ein Bot und kann noch nicht darauf antworten",
-                                  color=0xff0000)
+            embed = discord.Embed(title="", description=":x: Hey, ich bin nur ein Bot und kann noch nicht darauf antworten", color=0xff0000)
             if not message.author.bot:
+                await message.channel.trigger_typing()
+                await asyncio.sleep(0.5)
                 await message.author.send(embed=embed)
 
     else:
@@ -200,15 +214,20 @@ async def on_message(message):
                 if message.author.id == client.AppInfo.owner.id:
                     if CONFIG.clientLogout == False:
                         embed = discord.Embed(title="", description="Der Bot wird deaktiviert...", color=0xe74c3c)
-                        await client.change_presence(status=discord.Status.do_not_disturb,
-                                                     activity=discord.Game(name="Bot deaktiviert"))
+                        await client.change_presence(status=discord.Status.do_not_disturb, activity=discord.Game(name="Bot deaktiviert"))
+                        await message.channel.trigger_typing()
+                        await asyncio.sleep(0.5)
                         await message.channel.send(embed=embed)
                         CONFIG.clientLogout = True
                     else:
                         embed = discord.Embed(title="", description=":x: Der Bot ist schon deaktiviert", color=0xff0000)
+                        await message.channel.trigger_typing()
+                        await asyncio.sleep(0.5)
                         await message.channel.send(embed=embed)
                 else:
                     embed = discord.Embed(title="", description=":x: Hey, dafür hast du keine Rechte!", color=0xff0000)
+                    await message.channel.trigger_typing()
+                    await asyncio.sleep(0.5)
                     await message.channel.send(embed=embed)
             if message.content.startswith(CONFIG.PREFIX + 'login'):
                 client.AppInfo = await client.application_info()
@@ -216,14 +235,19 @@ async def on_message(message):
                     if CONFIG.clientLogout == True:
                         embed = discord.Embed(title="", description="Der Bot wird aktiviert...", color=0x2ecc71)
                         client.gamesLoop = asyncio.ensure_future(_randomGame())
+                        await message.channel.trigger_typing()
+                        await asyncio.sleep(0.5)
                         await message.channel.send(embed=embed)
                         CONFIG.clientLogout = False
                     else:
-                        embed = discord.Embed(title="", description=":x: Das geht nur, wenn der Bot deaktiviert ist",
-                                              color=0xff0000)
+                        embed = discord.Embed(title="", description=":x: Das geht nur, wenn der Bot deaktiviert ist", color=0xff0000)
+                        await message.channel.trigger_typing()
+                        await asyncio.sleep(0.5)
                         await message.channel.send(embed=embed)
                 else:
                     embed = discord.Embed(title="", description=":x: Hey, dafür hast du keine Rechte!", color=0xff0000)
+                    await message.channel.trigger_typing()
+                    await asyncio.sleep(0.5)
                     await message.channel.send(embed=embed)
 
             if CONFIG.clientLogout == False:
@@ -231,15 +255,29 @@ async def on_message(message):
                     if message.guild.id in SV_NEWS.newsID:
                         patchChannelID = SV_NEWS.newsID.get(message.guild.id)[0:18]
                         patchMessageID = SV_NEWS.newsID.get(message.guild.id)[19:37]
-                        patchChannel = message.guild.get_channel(int(patchChannelID))
-                        patchMessage = await patchChannel.fetch_message(int(patchMessageID))
-                        embed = discord.Embed(title="", description="", color=0x00ff00)
-                        embed.add_field(name="Neuigkeiten", value=patchMessage.content, inline=False)
-                        embed.set_footer(text="Server News von " + message.guild.name, icon_url=client.user.avatar_url, )
-                        embed.set_thumbnail(url=message.guild.icon_url)
-                        embed.timestamp = datetime.datetime.utcnow()
-                        await message.channel.send(embed=embed)
+                        try:
+                            patchChannel = message.guild.get_channel(int(patchChannelID))
+                            try:
+                                patchMessage = await patchChannel.fetch_message(int(patchMessageID))
+                                embed = discord.Embed(title="", description="", color=0x00ff00)
+                                embed.add_field(name="Neuigkeiten", value=patchMessage.content, inline=False)
+                                embed.set_footer(text="Server News von " + message.guild.name, icon_url=client.user.avatar_url, )
+                                embed.set_thumbnail(url=message.guild.icon_url)
+                                embed.timestamp = datetime.datetime.utcnow()
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
+                                await message.channel.send(embed=embed)
+                            except:
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
+                                await message.channel.send(":x: Diese Nachricht wurde gelöscht!")
+                        except:
+                            await message.channel.trigger_typing()
+                            await asyncio.sleep(0.5)
+                            await message.channel.send(":x: Dieser Channel wurde gelöscht!")
                     else:
+                        await message.channel.trigger_typing()
+                        await asyncio.sleep(0.5)
                         await message.channel.send(":x: Es wurde keine Nachricht eingestellt!")
 
                 if message.content.startswith(CONFIG.PREFIX + 'set-news'):
@@ -262,6 +300,8 @@ async def on_message(message):
                                                     __newDictionary = str(__newDictionary).replace(",", ",\n")
                                                     __newDictionary = str(__newDictionary).replace("}", "\n}")
                                                     sv_news.write("newsID = " + str(__newDictionary))
+                                                    await message.channel.trigger_typing()
+                                                    await asyncio.sleep(0.5)
                                                     await message.channel.send(":white_check_mark: Erfolgreich gesetzt")
                                                 except:
                                                     SV_NEWS.newsID.update({message.guild.id: str(channelID) + "(" + str(messageID) + ")"})
@@ -270,20 +310,36 @@ async def on_message(message):
                                                     __newDictionary = str(__newDictionary).replace(",", ",\n")
                                                     __newDictionary = str(__newDictionary).replace("}", "\n}")
                                                     sv_news.write("newsID = " + str(__newDictionary))
+                                                    await message.channel.trigger_typing()
+                                                    await asyncio.sleep(0.5)
                                                     await message.channel.send(":white_check_mark: Erfolgreich gesetzt")
                                             except:
+                                                await message.channel.trigger_typing()
+                                                await asyncio.sleep(0.5)
                                                 await message.channel.send(":x: Konfig konnte nicht gespeichert werden!")
                                         except:
+                                            await message.channel.trigger_typing()
+                                            await asyncio.sleep(0.5)
                                             await message.channel.send(":x: Datei wurde nicht gefunden!")
                                     except:
+                                        await message.channel.trigger_typing()
+                                        await asyncio.sleep(0.5)
                                         await message.channel.send(":x: Die Nachrichten-ID ist ungültig!")
                                 else:
+                                    await message.channel.trigger_typing()
+                                    await asyncio.sleep(0.5)
                                     await message.channel.send(":x: Die Kanal-ID ist ungültig!")
                             else:
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
                                 await message.channel.send(":x: Bitte benutze **" + CONFIG.PREFIX + "set-news [Kanal-ID] [Nachrichten-ID]**")
                         else:
+                            await message.channel.trigger_typing()
+                            await asyncio.sleep(0.5)
                             await message.channel.send(":x: Bitte benutze **" + CONFIG.PREFIX + "set-news [Kanal-ID] [Nachrichten-ID]**")
                     else:
+                        await message.channel.trigger_typing()
+                        await asyncio.sleep(0.5)
                         await message.channel.send(":x: Keine Rechte!")
 
                 if message.content.startswith(CONFIG.PREFIX + "bot-info"):
@@ -300,6 +356,8 @@ async def on_message(message):
                     embed.set_thumbnail(url=client.user.avatar_url)
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp = datetime.datetime.utcnow()
+                    await message.channel.trigger_typing()
+                    await asyncio.sleep(0.5)
                     await message.channel.send(embed=embed)
 
                 if message.content.startswith(CONFIG.PREFIX + "sv-info"):
@@ -326,6 +384,8 @@ async def on_message(message):
                     embed.set_footer(text="Server Info von " + message.guild.name, icon_url=client.user.avatar_url)
                     embed.set_thumbnail(url=message.guild.icon_url)
                     embed.timestamp = datetime.datetime.utcnow()
+                    await message.channel.trigger_typing()
+                    await asyncio.sleep(0.5)
                     await message.channel.send(embed=embed)
 
                 if message.content.startswith(CONFIG.PREFIX + "whois"):
@@ -335,6 +395,8 @@ async def on_message(message):
                         if not len(message.content) == 6:
                             member = message.mentions[0]
                     except:
+                        await message.channel.trigger_typing()
+                        await asyncio.sleep(0.5)
                         await message.channel.send(":x: Bitte benutze **" + CONFIG.PREFIX + "whois <@User#1234>**")
                         return
 
@@ -394,21 +456,27 @@ async def on_message(message):
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp = datetime.datetime.utcnow()
                     embed.set_author(name=member, icon_url=member.avatar_url)
+                    await message.channel.trigger_typing()
+                    await asyncio.sleep(0.5)
                     await message.channel.send(embed=embed)
 
                 if message.content.startswith(CONFIG.PREFIX + "ping"):
                     latency = str(client.latency)[0:4]
+                    await message.channel.trigger_typing()
+                    await asyncio.sleep(0.5)
                     await message.channel.send("Bot Ping = " + latency + "ms")
 
                 if message.content.startswith(CONFIG.PREFIX + "invite"):
                     await message.channel.send(message.author.mention + ", der Einladungslink wurde dir zugeschickt.")
                     embed = discord.Embed(title="", description="Hier kannst du mich zu deinem Server einladen:\n"
-                                                                "https://discordapp.com/oauth2/authorize?client_id=664831660235292714&scope=bot&permissions=67632230\n"
+                                                                "http://bit.ly/361uYxI\n"
                                                                 "\nBedenke aber das du eine Lizenz brauchst. Lizenzen kannst du bei **" + client.AppInfo.owner.mention + "** kaufen.",
                                           color=0xffffff)
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp = datetime.datetime.utcnow()
                     if not message.author.bot:
+                        await message.channel.trigger_typing()
+                        await asyncio.sleep(0.5)
                         await message.author.send(embed=embed)
 
                 if message.content.startswith(CONFIG.PREFIX + "src"):
@@ -418,6 +486,8 @@ async def on_message(message):
                                                                 "\n```" + mit_license.read() + "```", color=0xffffff)
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp = datetime.datetime.utcnow()
+                    await message.channel.trigger_typing()
+                    await asyncio.sleep(0.5)
                     await message.channel.send(embed=embed)
 
                 if message.content.startswith(CONFIG.PREFIX + "kick"):
@@ -430,20 +500,36 @@ async def on_message(message):
                                         if not message.guild.owner in message.mentions:
                                             try:
                                                 await member.kick(reason=None)
+                                                await message.channel.trigger_typing()
+                                                await asyncio.sleep(0.5)
                                                 await message.channel.send(":white_check_mark: Du hast **" + str(member) + "** gekickt")
                                             except:
+                                                await message.channel.trigger_typing()
+                                                await asyncio.sleep(0.5)
                                                 await message.channel.send(":x: Ich darf das nicht!")
                                         else:
+                                            await message.channel.trigger_typing()
+                                            await asyncio.sleep(0.5)
                                             await message.channel.send(":x: Du kannst denn Besitzer dieses Servers nicht kicken!")
                                     except:
+                                        await message.channel.trigger_typing()
+                                        await asyncio.sleep(0.5)
                                         await message.channel.send(":x: Du kannst denn Besitzer dieses Servers nicht kicken!")
                                 else:
+                                    await message.channel.trigger_typing()
+                                    await asyncio.sleep(0.5)
                                     await message.channel.send(":x: Ich kann mich nicht selber kicken!")
                             except:
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
                                 await message.channel.send(":x: Ich kann mich nicht selber kicken!")
                         except:
+                            await message.channel.trigger_typing()
+                            await asyncio.sleep(0.5)
                             await message.channel.send(":x: Bitte benutze **" + CONFIG.PREFIX + "kick [@User#1234]**!")
                     else:
+                        await message.channel.trigger_typing()
+                        await asyncio.sleep(0.5)
                         await message.channel.send(":x: Keine Rechte!")
 
             if client.user.mentioned_in(message) and message.mention_everyone is False:
@@ -471,9 +557,13 @@ async def on_message(message):
                     if message.content.startswith((CONFIG).PREFIX + "kick"):
                         return
                     if message.content.startswith("Hallo"):
+                        await message.channel.trigger_typing()
+                        await asyncio.sleep(0.5)
                         await message.channel.send('Hallo ' + message.author.mention)
                         return
                     else:
+                        await message.channel.trigger_typing()
+                        await asyncio.sleep(0.5)
                         await message.channel.send('Meine Prefix ist **' + CONFIG.PREFIX + '** ' + message.author.mention)
 
 
@@ -485,6 +575,8 @@ async def on_message(message):
                                       color=0xff0000)
                 embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                 embed.timestamp = datetime.datetime.utcnow()
+                await message.channel.trigger_typing()
+                await asyncio.sleep(0.5)
                 await message.channel.send(embed=embed)
 
 
