@@ -467,6 +467,8 @@ async def on_message(message):
                     await message.channel.send("Bot Ping = " + latency + "ms")
 
                 if message.content.startswith(CONFIG.PREFIX + "invite"):
+                    await message.channel.trigger_typing()
+                    await asyncio.sleep(0.5)
                     await message.channel.send(message.author.mention + ", der Einladungslink wurde dir zugeschickt.")
                     embed = discord.Embed(title="", description="Hier kannst du mich zu deinem Server einladen:\n"
                                                                 "http://bit.ly/361uYxI\n"
