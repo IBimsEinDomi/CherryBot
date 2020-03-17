@@ -22,19 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import discord
-
 TOKEN = "YOUR-TOKEN"
 PREFIX = "&"
-serverLicense = "Keine Lizenz"
 clientLogout = False
-AllowedServer = [
-            664482898937905173,
-            479691134482776066,
-            453203550579982347,
-            660091191752261662
-                 ]
-SupportLicenseServer = [
-            664482898937905173,
-            479691134482776066
-                 ]
