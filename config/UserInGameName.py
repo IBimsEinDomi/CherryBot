@@ -1,0 +1,15 @@
+uplay = {
+ 354191516979429376: 'G5R_IBimsDomi',
+ 476384057236914178: 'nikitheg4m3r100',
+ 448533099945656330: 'G5R_Jerry'
+}
+steam = {
+ 354191516979429376: 'IBimsEinDomi',
+ 476384057236914178: 'PutinSpencerHere2',
+ 448533099945656330: 'IBims_Jerry'
+}
+epicgames = {
+ 354191516979429376: 'IBimsEinMystery',
+ 648794263567597569: 'IBimsEinMystery',
+ 448533099945656330: 'Möwen_Jerry'
+}
