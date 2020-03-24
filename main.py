@@ -34,7 +34,7 @@ import codecs
 import os
 
 client = discord.Client()
-__version__ = '1.2.1'
+__version__ = '1.3'
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 THIS_FILE = os.path.join(THIS_FOLDER, 'MIT.txt')
 mit_license = codecs.open(THIS_FILE, "r", encoding="utf-8")
@@ -599,8 +599,8 @@ async def on_message(message):
             
             #ping
                 if message.content.startswith(CONFIG.PREFIX + "ping"):
-                    embed=discord.Embed(title="", description="Bot Ping = " + latency + "ms", color=0xe43d53)
                     latency = str(client.latency)[0:4]
+                    embed=discord.Embed(title="", description="Bot Ping = " + latency + "ms", color=0xe43d53)
                     await message.channel.trigger_typing()
                     await asyncio.sleep(0.5)
                     await message.channel.send(embed=embed) 
@@ -735,7 +735,7 @@ async def on_message(message):
                         try:
                             member = message.mentions[0]
                         except:
-                            embed = discord.Embed(title="", description="Bitte benutze **" + CONFIG.PREFIX + "uplay <@User#1234>**", color=0xff0000)
+                            embed = discord.Embed(title="", description="Bitte benutze **" + CONFIG.PREFIX + "uplay <@User#1234/unlink>**", color=0xff0000)
                             await message.channel.trigger_typing()
                             await asyncio.sleep(0.5)
                             await message.channel.send(embed=embed)
@@ -752,7 +752,7 @@ async def on_message(message):
                             await asyncio.sleep(0.5)
                             await message.channel.send(embed=embed)
                         elif not member.id in UserInGameName.uplay and len(args) == 2:
-                            embed=discord.Embed(title="", description=member.mention + " muss erst seinen\nAccount mit `&register uplay [Name]`\nverknüpfen", color=0x0070FF)
+                            embed=discord.Embed(title="", description=member.mention + " muss erst seinen\nAccount mit `" + CONFIG.PREFIX + "register uplay [Name]`\nverknüpfen", color=0x0070FF)
                             embed.set_footer(text="Uplay", icon_url="https://pics.computerbase.de/7/7/5/8/3/logo-256.png")
                             embed.timestamp=datetime.datetime.utcnow()
                             embed.set_author(name=member.name, icon_url=member.avatar_url)
@@ -760,7 +760,7 @@ async def on_message(message):
                             await asyncio.sleep(0.5)
                             await message.channel.send(embed=embed)
                         else:
-                            embed=discord.Embed(title="", description="Du musst erst deinen\nAccount mit `&register uplay [Name]`\nverknüpfen", color=0x0070FF)
+                            embed=discord.Embed(title="", description="Du musst erst deinen\nAccount mit `" + CONFIG.PREFIX + "register uplay [Name]`\nverknüpfen", color=0x0070FF)
                             embed.set_footer(text="Uplay", icon_url="https://pics.computerbase.de/7/7/5/8/3/logo-256.png")
                             embed.timestamp=datetime.datetime.utcnow()
                             embed.set_author(name=member.name, icon_url=member.avatar_url)
@@ -824,7 +824,7 @@ async def on_message(message):
                         try:
                             member = message.mentions[0]
                         except:
-                            embed = discord.Embed(title="", description="Bitte benutze **" + CONFIG.PREFIX + "steam <@User#1234>**", color=0xff0000)
+                            embed = discord.Embed(title="", description="Bitte benutze **" + CONFIG.PREFIX + "steam <@User#1234/unlink>**", color=0xff0000)
                             await message.channel.trigger_typing()
                             await asyncio.sleep(0.5)
                             await message.channel.send(embed=embed)
@@ -840,9 +840,17 @@ async def on_message(message):
                             await message.channel.trigger_typing()
                             await asyncio.sleep(0.5)
                             await message.channel.send(embed=embed)
+                        elif not member.id in UserInGameName.uplay and len(args) == 2:
+                            embed=discord.Embed(title="", description=member.mention + " muss erst seinen\nAccount mit `" + CONFIG.PREFIX + "register steam [Name]`\nverknüpfen", color=0x091936)
+                            embed.set_footer(text="Uplay", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2000px-Steam_icon_logo.svg.png")
+                            embed.timestamp=datetime.datetime.utcnow()
+                            embed.set_author(name=member.name, icon_url=member.avatar_url)
+                            await message.channel.trigger_typing()
+                            await asyncio.sleep(0.5)
+                            await message.channel.send(embed=embed)
                         else:
-                            embed=discord.Embed(title="", description=member.mention + " muss erst seinen\nAccount mit `&register steam [Name]`\nverknüpfen", color=0x091936)
-                            embed.set_footer(text="Steam", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2000px-Steam_icon_logo.svg.png")
+                            embed=discord.Embed(title="", description="Du musst erst deinen\nAccount mit `" + CONFIG.PREFIX + "register steam [Name]`\nverknüpfen", color=0x091936)
+                            embed.set_footer(text="Uplay", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2000px-Steam_icon_logo.svg.png")
                             embed.timestamp=datetime.datetime.utcnow()
                             embed.set_author(name=member.name, icon_url=member.avatar_url)
                             await message.channel.trigger_typing()
@@ -920,9 +928,17 @@ async def on_message(message):
                             await message.channel.trigger_typing()
                             await asyncio.sleep(0.5)
                             await message.channel.send(embed=embed)
+                        elif not member.id in UserInGameName.uplay and len(args) == 2:
+                            embed=discord.Embed(title="", description=member.mention + " muss erst seinen\nAccount mit `" + CONFIG.PREFIX + "register epicgames [Name]`\nverknüpfen", color=0x2F2D2E)
+                            embed.set_footer(text="Uplay", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Epic_Games_logo.svg/2000px-Epic_Games_logo.svg.png")
+                            embed.timestamp=datetime.datetime.utcnow()
+                            embed.set_author(name=member.name, icon_url=member.avatar_url)
+                            await message.channel.trigger_typing()
+                            await asyncio.sleep(0.5)
+                            await message.channel.send(embed=embed)
                         else:
-                            embed=discord.Embed(title="", description=member.mention + " muss erst seinen\nAccount mit `&register epicgames [Name]`\nverknüpfen", color=0x2F2D2E)
-                            embed.set_footer(text="Epic Games", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Epic_Games_logo.svg/2000px-Epic_Games_logo.svg.png")
+                            embed=discord.Embed(title="", description="Du musst erst deinen\nAccount mit `" + CONFIG.PREFIX + "register epicgames [Name]`\nverknüpfen", color=0x2F2D2E)
+                            embed.set_footer(text="Uplay", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Epic_Games_logo.svg/2000px-Epic_Games_logo.svg.png")
                             embed.timestamp=datetime.datetime.utcnow()
                             embed.set_author(name=member.name, icon_url=member.avatar_url)
                             await message.channel.trigger_typing()
@@ -1173,6 +1189,28 @@ async def on_message(message):
                             await message.channel.trigger_typing()
                             await asyncio.sleep(0.5)
                             await message.channel.send(embed=embed)
+            
+            #help
+                if message.content.startswith(CONFIG.PREFIX + "help"):
+                    embed = discord.Embed(title="Alle Befehle", color=0xe43d53, description="**" + CONFIG.PREFIX + "bot-info**: Zeigt dir Infos über den Bot an\n\n**"
+                                    + CONFIG.PREFIX + "ping**: Zeigt dir den Ping zwischen Bot und Discord an\n\n**" 
+                                    + CONFIG.PREFIX + "invite**: Schickt dir einen Einladungslink für den Bot\n\n**"
+                                    + CONFIG.PREFIX + "src**: Schickt den GitHub Link zum Bot\n\n**"
+                                    + CONFIG.PREFIX + "set-news [Kanal-ID] [Nachrichten-ID]**: Setzt die Nachricht für die News\n\n**" 
+                                    + CONFIG.PREFIX + "sv-news**: Zeigt dir die News Nachricht\n\n**"
+                                    + CONFIG.PREFIX + "sv-info**: Zeigt dir infos über den Server an\n\n**"
+                                    + CONFIG.PREFIX + "whois <@User#1234>**: Zeigt dir Infos über User\n\n**"
+                                    + CONFIG.PREFIX + "kick [@User#1234]**: Kickt den angegebenen User vom Server\n\n**"
+                                    + CONFIG.PREFIX + "register [uplay/steam/epicgames] [Name]**: Verknüpft euren Nickname mit eurem Discord Account\n\n**"
+                                    + CONFIG.PREFIX + "uplay <@User#1234/unlink>**: Zeigt euren oder vom User den Uplay Namen an, oder entfernt die Verknüpfung\n\n**"
+                                    + CONFIG.PREFIX + "steam <@User#1234/unlink>**: Zeigt euren oder vom User den Steam Namen an, oder entfernt die Verknüpfung\n\n**"
+                                    + CONFIG.PREFIX + "epicgames <@User#1234/unlink>:** Zeigt euren oder vom User den Epic Games Namen an, oder entfernt die Verknüpfung")
+                    embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
+                    embed.timestamp=datetime.datetime.utcnow()
+                    await message.channel.trigger_typing()
+                    await asyncio.sleep(0.5)
+                    await message.channel.send(embed=embed)
+                
                             
             #RespondOnPing
                 if client.user.mentioned_in(message) and message.mention_everyone is False:
