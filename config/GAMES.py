@@ -28,7 +28,7 @@ __games__ = [
     (discord.ActivityType.playing, 'mit Python'),
     (discord.ActivityType.watching, 'auf {guilds} Server'),
     (discord.ActivityType.watching, 'auf {members} Mitglieder'),
-    (discord.ActivityType.listening, '&bot-info')
+    (discord.ActivityType.listening, '&help')
 ]
 __gamesTimer__ = [
     2 * 60,
