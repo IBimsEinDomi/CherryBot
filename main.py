@@ -34,7 +34,7 @@ import codecs
 import os
 
 client = discord.Client()
-__version__ = '1.2'
+__version__ = '1.2.1'
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 THIS_FILE = os.path.join(THIS_FOLDER, 'MIT.txt')
 mit_license = codecs.open(THIS_FILE, "r", encoding="utf-8")
@@ -392,17 +392,20 @@ async def on_message(message):
                                 await asyncio.sleep(0.5)
                                 await message.channel.send(embed=embed)
                             except:
+                                embed = discord.Embed(title="", description="Diese Nachricht wurde gelöscht!", color=0xff0000)
                                 await message.channel.trigger_typing()
                                 await asyncio.sleep(0.5)
-                                await message.channel.send("Diese Nachricht wurde gelöscht!")
+                                await message.channel.send(embed=embed)
                         except:
+                            embed = discord.Embed(title="", description="Dieser Channel wurde gelöscht!", color=0xff0000)
                             await message.channel.trigger_typing()
                             await asyncio.sleep(0.5)
-                            await message.channel.send("Dieser Channel wurde gelöscht!")
+                            await message.channel.send(embed=embed)
                     else:
+                        embed = discord.Embed(title="", description="Es wurde keine Nachricht eingestellt!", color=0xff0000)
                         await message.channel.trigger_typing()
                         await asyncio.sleep(0.5)
-                        await message.channel.send("Es wurde keine Nachricht eingestellt!")
+                        await message.channel.send(embed=embed)
             
             #set-news
                 if message.content.startswith(CONFIG.PREFIX + 'set-news'):
@@ -418,6 +421,7 @@ async def on_message(message):
                                             sv_news = open(".\config\SV_NEWS.py", "w")
                                             try:
                                                 try:
+                                                    embed = discord.Embed(title="", description=":white_check_mark: Erfolgreich gesetzt", color=0x2ecc71)
                                                     SV_NEWS.newsID.pop(message.guild.id)
                                                     SV_NEWS.newsID.update({message.guild.id: str(channelID) + "(" + str(messageID) + ")"})
                                                     __newDictionary = SV_NEWS.newsID.copy()
@@ -427,8 +431,9 @@ async def on_message(message):
                                                     sv_news.write("newsID = " + str(__newDictionary))
                                                     await message.channel.trigger_typing()
                                                     await asyncio.sleep(0.5)
-                                                    await message.channel.send(":white_check_mark: Erfolgreich gesetzt")
+                                                    await message.channel.send(embed=embed)
                                                 except:
+                                                    embed = discord.Embed(title="", description=":white_check_mark: Erfolgreich gesetzt", color=0x2ecc71)
                                                     SV_NEWS.newsID.update({message.guild.id: str(channelID) + "(" + str(messageID) + ")"})
                                                     __newDictionary = SV_NEWS.newsID.copy()
                                                     __newDictionary = str(__newDictionary).replace("{", "{\n ")
@@ -437,31 +442,37 @@ async def on_message(message):
                                                     sv_news.write("newsID = " + str(__newDictionary))
                                                     await message.channel.trigger_typing()
                                                     await asyncio.sleep(0.5)
-                                                    await message.channel.send(":white_check_mark: Erfolgreich gesetzt")
+                                                    await message.channel.send(embed=embed)
                                             except:
+                                                embed = discord.Embed(title="", description="Konfig konnte nicht gespeichert werden!", color=0xff0000)
                                                 await message.channel.trigger_typing()
                                                 await asyncio.sleep(0.5)
-                                                await message.channel.send("Konfig konnte nicht gespeichert werden!")
+                                                await message.channel.send(embed=embed)
                                         except:
+                                            embed = discord.Embed(title="", description="Datei wurde nicht gefunden!", color=0xff0000)
                                             await message.channel.trigger_typing()
                                             await asyncio.sleep(0.5)
-                                            await message.channel.send("Datei wurde nicht gefunden!")
+                                            await message.channel.send(embed=embed)
                                     except:
+                                        embed = discord.Embed(title="", description="Die Nachrichten-ID ist ungültig!", color=0xff0000)
                                         await message.channel.trigger_typing()
                                         await asyncio.sleep(0.5)
-                                        await message.channel.send("Die Nachrichten-ID ist ungültig!")
+                                        await message.channel.send(embed=embed)
                                 else:
+                                    embed = discord.Embed(title="", description="Die Kanal-ID ist ungültig!", color=0xff0000)
                                     await message.channel.trigger_typing()
                                     await asyncio.sleep(0.5)
-                                    await message.channel.send("Die Kanal-ID ist ungültig!")
+                                    await message.channel.send(embed=embed)
                             else:
+                                embed = discord.Embed(title="", description="Bitte benutze **" + CONFIG.PREFIX + "set-news [Kanal-ID] [Nachrichten-ID]**", color=0xff0000)
                                 await message.channel.trigger_typing()
                                 await asyncio.sleep(0.5)
-                                await message.channel.send("Bitte benutze **" + CONFIG.PREFIX + "set-news [Kanal-ID] [Nachrichten-ID]**")
+                                await message.channel.send(embed=embed)
                         else:
+                            embed = discord.Embed(title="", description="Bitte benutze **" + CONFIG.PREFIX + "set-news [Kanal-ID] [Nachrichten-ID]**", color=0xff0000)
                             await message.channel.trigger_typing()
                             await asyncio.sleep(0.5)
-                            await message.channel.send("Bitte benutze **" + CONFIG.PREFIX + "set-news [Kanal-ID] [Nachrichten-ID]**")
+                            await message.channel.send(embed=embed)
                     else:
                         embed = discord.Embed(title="", description="Hey " + message.author.mention + ", dafür hast du keine Rechte!", color=0xff0000)
                         await message.channel.trigger_typing()
@@ -475,7 +486,7 @@ async def on_message(message):
                     embed = discord.Embed(title="Bot Informationen", 
                     description="Bot-Name: " + client.user.name + "\nBot-ID: " + str(client.user.id) + "\nDiscord-Version: " + str(discord.__version__) + 
                     "\nBot-Version: " + str(__version__) + "\nPing: " + latency + "ms" + "\nPrefix: **&**" + "\nAktive Server: " + str(len(client.guilds)) + 
-                    " Server\nBot-Developer: " + str(client.AppInfo.owner.mention) + "\nBot-Sprache: :flag_de: German, Deutsch", color=0xDB3A39)
+                    " Server\nBot-Developer: " + str(client.AppInfo.owner.mention) + "\nBot-Sprache: :flag_de: German, Deutsch", color=0xe43d53)
                     embed.set_thumbnail(url=client.user.avatar_url)
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp = datetime.datetime.utcnow()
@@ -539,9 +550,12 @@ async def on_message(message):
                     role_list = ', '.join(role_name)
                     role_amount = role_list.count("@")
                     if len(role_list) <= 25:
-                        role_list = "\n:x: Keine Rollen auf dem Server"
+                        role_list = "\nKeine Rollen auf dem Server"
                     
                     color = member.top_role.color
+                    client.AppInfo = await client.application_info()
+                    if member.id == client.user.id:
+                        color=0xe43d53
                     
                     __AllPerms = ""
                     if member.guild_permissions.administrator:
@@ -567,7 +581,7 @@ async def on_message(message):
                     if member.guild_permissions.change_nickname:
                         __AllPerms += "Nicknamen ändern"
                     if __AllPerms == "":
-                        __AllPerms = ":x: Keine Rechte auf dem Server"
+                        __AllPerms = "Keine Rechte auf dem Server"
                     embed = discord.Embed(title="", description="Name: " + str(member.mention) +
                                                                 "\nID: " + str(member.id) +
                                                                 "\nBeigetreten: " + str(AuthorGuildJoinDate) +
@@ -585,17 +599,19 @@ async def on_message(message):
             
             #ping
                 if message.content.startswith(CONFIG.PREFIX + "ping"):
+                    embed=discord.Embed(title="", description="Bot Ping = " + latency + "ms", color=0xe43d53)
                     latency = str(client.latency)[0:4]
                     await message.channel.trigger_typing()
                     await asyncio.sleep(0.5)
-                    await message.channel.send("Bot Ping = " + latency + "ms")
+                    await message.channel.send(embed=embed) 
                     
             #invite
                 if message.content.startswith(CONFIG.PREFIX + "invite"):
+                    embed=discord.Embed(title="", description=message.author.mention + ", der Einladungslink wurde dir zugeschickt.", color=0xe43d53)
                     await message.channel.trigger_typing()
                     await asyncio.sleep(0.5)
-                    await message.channel.send(message.author.mention + ", der Einladungslink wurde dir zugeschickt.")
-                    embed = discord.Embed(title="", description="Hier kannst du mich zu deinem Server einladen:\nhttps://bit.ly/2wlXDC3", color=0xDB3A39)
+                    await message.channel.send(embed=embed)
+                    embed = discord.Embed(title="", description="Hier kannst du mich zu deinem Server einladen:\nhttps://bit.ly/2wlXDC3", color=0xe43d53)
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp = datetime.datetime.utcnow()
                     if not message.author.bot:
@@ -606,7 +622,7 @@ async def on_message(message):
                     embed = discord.Embed(title="", description="Hier findest du meinen Source Code:"
                                                                 "\nhttps://github.com/IBimsEinMystery/ServerMod"
                                                                 "\n\n**Dieser Source Code steht unter Lizenz:**"
-                                                                "\n```" + mit_license.read() + "```", color=0xDB3A39)
+                                                                "\n```" + mit_license.read() + "```", color=0xe43d53)
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp = datetime.datetime.utcnow()
                     await message.channel.trigger_typing()
@@ -616,10 +632,8 @@ async def on_message(message):
             #kick
                 if message.content.startswith(CONFIG.PREFIX + "kick"):
                     DateTime = datetime.datetime.now(timezone('Europe/Berlin'))
-                    __printDateTime = str(DateTime)[11:13] + ":" + str(DateTime)[14:16] + ":" + str(DateTime)[
-                                                                                                17:19] + " " \
-                                    + str(DateTime)[8:10] + "." + str(DateTime)[5:7] + "." + str(
-                        DateTime.year) + " \xbb "
+                    __printDateTime = str(DateTime)[11:13] + ":" + str(DateTime)[14:16] + ":" + str(DateTime)[17:19] + " " \
+                                    + str(DateTime)[8:10] + "." + str(DateTime)[5:7] + "." + str(DateTime.year) + " \xbb "
                     if message.author.guild_permissions.kick_members:
                         try:
                             memberKick = message.mentions[0]
@@ -631,35 +645,42 @@ async def on_message(message):
                                     try:
                                         if not str(message.guild.owner.id) in message.mentions:
                                             try:
-                                                await memberKick.kick(reason=None)
+                                                embed=discord.Embed(title="", description=":white_check_mark: Du hast " + memberKick.mention + " gekickt", color=0x2ecc71)
+                                                await memberKick.kick(reason=str(message.author) + " hat " + str(memberKick) + " entfernt")
                                                 await message.channel.trigger_typing()
                                                 await asyncio.sleep(0.5)
-                                                await message.channel.send(":white_check_mark: Du hast " + memberKick.mention + " gekickt")
+                                                await message.channel.send(embed=embed)
                                                 print(__printDateTime + str(author) + " hat " + str(memberKick) + " von " + message.guild.name + "(" +  str(message.guild.id) + ")" + " gekickt")
                                             except:
+                                                embed=discord.Embed(title="", description="Ich habe keine Rechte zum kicken", color=0xff0000)
                                                 await message.channel.trigger_typing()
                                                 await asyncio.sleep(0.5)
-                                                await message.channel.send(":x: Ich darf das nicht!")
+                                                await message.channel.send(embed=embed)
                                         else:
+                                            embed=discord.Embed(title="", description="Du kannst denn Besitzer dieses Servers nicht kicken!", color=0xff0000)
                                             await message.channel.trigger_typing()
                                             await asyncio.sleep(0.5)
-                                            await message.channel.send(":x: Du kannst denn Besitzer dieses Servers nicht kicken!")
+                                            await message.channel.send(embed=embed)
                                     except:
+                                        embed=discord.Embed(title="", description="Du kannst denn Besitzer dieses Servers nicht kicken!", color=0xff0000)
                                         await message.channel.trigger_typing()
                                         await asyncio.sleep(0.5)
-                                        await message.channel.send(":x: Du kannst denn Besitzer dieses Servers nicht kicken!")
+                                        await message.channel.send(embed=embed)
                                 else:
+                                    embed=discord.Embed(title="", description="Ich kann mich nicht selber kicken!", color=0xff0000)
                                     await message.channel.trigger_typing()
                                     await asyncio.sleep(0.5)
-                                    await message.channel.send(":x: Ich kann mich nicht selber kicken!")
+                                    await message.channel.send(embed=embed)
                             except:
+                                embed=discord.Embed(title="", description="Ich kann mich nicht selber kicken!", color=0xff0000)
                                 await message.channel.trigger_typing()
                                 await asyncio.sleep(0.5)
-                                await message.channel.send(":x: Ich kann mich nicht selber kicken!")
+                                await message.channel.send(embed=embed)
                         except:
+                            embed=discord.Embed(title="", description="Bitte benutze **" + CONFIG.PREFIX + "kick [@User#1234]**!", color=0xff0000)
                             await message.channel.trigger_typing()
                             await asyncio.sleep(0.5)
-                            await message.channel.send(":x: Bitte benutze **" + CONFIG.PREFIX + "kick [@User#1234]**!")
+                            await message.channel.send(embed=embed)
                     else:
                         embed = discord.Embed(title="", description="Hey " + message.author.mention + ", dafür hast du keine Rechte!", color=0xff0000)
                         await message.channel.trigger_typing()
@@ -712,9 +733,9 @@ async def on_message(message):
                             return
                     elif len(args) == 2:
                         try:
-                            member = args[1].mentions[0]
+                            member = message.mentions[0]
                         except:
-                            embed = discord.Embed(title="", description="Bitte benutze **" + CONFIG.PREFIX + "uplay<@User#1234>**", color=0xff0000)
+                            embed = discord.Embed(title="", description="Bitte benutze **" + CONFIG.PREFIX + "uplay <@User#1234>**", color=0xff0000)
                             await message.channel.trigger_typing()
                             await asyncio.sleep(0.5)
                             await message.channel.send(embed=embed)
