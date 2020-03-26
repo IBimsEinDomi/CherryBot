@@ -92,7 +92,7 @@ Was ihr benötigt
     pytz
     pillow
 
-License
+Lizenz
 -------------
     MIT License
 
