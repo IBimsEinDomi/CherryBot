@@ -34,7 +34,7 @@ import codecs
 import os
 
 client = discord.Client()
-__version__ = '1.3.1'
+__version__ = '1.3.2'
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 THIS_FILE = os.path.join(THIS_FOLDER, 'MIT.txt')
 mit_license = codecs.open(THIS_FILE, "r", encoding="utf-8")
@@ -714,7 +714,7 @@ async def on_message(message):
                                 uplay.write("uplay = " + newFileUplay)
                                 uplay.write("\nsteam = " + newFileSteam)
                                 uplay.write("\nepicgames = " + newFileEpic)
-                                embed = discord.Embed(title="", description="Die Verknüpfung wurde gelöscht", color=0xff0000)
+                                embed = discord.Embed(title="", description="Die Verknüpfung wurde gelöscht", color=0x2ecc71)
                                 await message.channel.send(embed=embed)
                             except:
                                 embed=discord.Embed(title="", description="Es trat ein Fehler auf!\nBitte versuche es später erneut", color=0xff0000)
