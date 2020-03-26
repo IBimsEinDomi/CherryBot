@@ -34,7 +34,7 @@ import codecs
 import os
 
 client = discord.Client()
-__version__ = '1.3'
+__version__ = '1.3.1'
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 THIS_FILE = os.path.join(THIS_FOLDER, 'MIT.txt')
 mit_license = codecs.open(THIS_FILE, "r", encoding="utf-8")
@@ -531,9 +531,10 @@ async def on_message(message):
                         if not len(message.content) == 6:
                             member = message.mentions[0]
                     except:
+                        embed = discord.Embed(title="", description="Bitte benutze **" + CONFIG.PREFIX + "whois <@User#1234>**", color=0xff0000)
                         await message.channel.trigger_typing()
                         await asyncio.sleep(0.5)
-                        await message.channel.send("Bitte benutze **" + CONFIG.PREFIX + "whois <@User#1234>**")
+                        await message.channel.send(embed=embed)
                         return
                     __JoinPos__ = ""
                     if member.joined_at is None:
@@ -713,7 +714,8 @@ async def on_message(message):
                                 uplay.write("uplay = " + newFileUplay)
                                 uplay.write("\nsteam = " + newFileSteam)
                                 uplay.write("\nepicgames = " + newFileEpic)
-                                await message.channel.send("Die Verknüpfung wurde gelöscht")
+                                embed = discord.Embed(title="", description="Die Verknüpfung wurde gelöscht", color=0xff0000)
+                                await message.channel.send(embed=embed)
                             except:
                                 embed=discord.Embed(title="", description="Es trat ein Fehler auf!\nBitte versuche es später erneut", color=0xff0000)
                                 embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
@@ -802,7 +804,8 @@ async def on_message(message):
                                 steam.write("uplay = " + newFileUplay)
                                 steam.write("\nsteam = " + newFileSteam)
                                 steam.write("\nepicgames = " + newFileEpic)
-                                await message.channel.send("Die Verknüpfung wurde gelöscht")
+                                embed = discord.Embed(title="", description="Die Verknüpfung wurde gelöscht", color=0x2ecc71)
+                                await message.channel.send(embed=embed)
                             except:
                                 embed=discord.Embed(title="", description="Es trat ein Fehler auf!\nBitte versuche es später erneut", color=0xff0000)
                                 embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
@@ -891,7 +894,8 @@ async def on_message(message):
                                 epic.write("uplay = " + newFileUplay)
                                 epic.write("\nsteam = " + newFileSteam)
                                 epic.write("\nepicgames = " + newFileEpic)
-                                await message.channel.send("Die Verknüpfung wurde gelöscht")
+                                embed = discord.Embed(title="", description="Die Verknüpfung wurde gelöscht", color=0x2ecc71)
+                                await message.channel.send(embed=embed)
                             except:
                                 embed=discord.Embed(title="", description="Es trat ein Fehler auf!\nBitte versuche es später erneut", color=0xff0000)
                                 embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
