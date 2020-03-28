@@ -1,60 +1,117 @@
----
-description: Eine Liste mit allen Befehlen
----
+![Avatar](CherryBot-Banner.png)
+=====================
 
-# Befehle
+[![Python3](https://img.shields.io/badge/python-3.8-blue.svg)](https://github.com/IBimsEinMystery/CherryBot)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/IBimsEinMystery/CherryBot/master/LICENSE)
+[![Discord Server](https://img.shields.io/badge/Support-Discord%20Server-blue.svg)](https://discord.gg/ZMDJKUf)
 
-{% hint style="warning" %}
-Wenn du weitere Hilfe benötigst, kannst du dem [Support Server](https://discord.gg/invite/ZMDJKUf) beitreten
-{% endhint %}
+Commands List
+-------------
+**Info:** Prefix `&`
 
-{% hint style="info" %}
-Parameter: **\[\] = erforderlich, &lt;&gt; = optional**
-{% endhint %}
+### Generell ###
 
-{% hint style="success" %}
-Prefix: **&**
-{% endhint %}
-
-## Allgemeine Befehle <a id="basic-commands"></a>
-
-* **help:** Zeigt dir eine Liste mit allen Befehlen
-* **bot-info**: Zeigt dir Infos über den Bot an
-* **ping:** Zeigt dir den Ping zwischen Bot und Discord an
-* **invite:** Schickt dir einen[ Einladungslink](https://discordapp.com/oauth2/authorize?client_id=664831660235292714&scope=bot&response_type=code&redirect_uri=https://discord.gg/ZMDJKUf&permissions=543818) für den Bot
-* **src:** Schickt den [GitHub Link](https://github.com/IBimsEinMystery/CherryBot) zum Bot
-
-## Server Befehle <a id="server-commands"></a>
-
-* **set-news \[Kanal-ID\] \[Nachrichten-ID\]:** Setzt die Nachricht für die News
-* **sv-news:** Zeigt die News Nachricht
-* **sv-info:** Zeigt dir Infos über den Server an
-* **whois &lt;@User\#1234&gt;:** Zeigt dir Infos über dich oder User
-* **kick \[@User\#1234\]:** Kickt den angegeben User vom Server
-
-## Sonstiges <a id="others"></a>
-
-* **register \[uplay/steam/epicgames\] \[Name\]:** Verknüpft euren Nickname mit eurem Discord Account
-* **uplay &lt;@User\#1234/unlink&gt;:** Zeigt euren oder vom User den Uplay Namen an, oder entfernt die Verknüpfung
-* **steam &lt;@User\#1234/unlink&gt;:** Zeigt euren oder vom User den Steam Namen an, oder entfernt die Verknüpfung
-* **epicgames &lt;@User\#1234/unlink&gt;:** Zeigt euren oder vom User den Epic Games Namen an, oder entfernt die Verknüpfung
-
-## Berechtigungen <a id="permissions"></a>
-
-{% hint style="danger" %}
-Wenn nicht alle Berechtigungen vorhanden sind, funktioniert der Bot möglicherweise nicht zu 100%
-{% endhint %}
-
-Der Bot benötigt:
-
-* **Administrator:** Um alle benötigten Rechte zu haben. Diese Berechtigung kann aber entfernt werden, wenn alle anderen Berechtigungen erlaubt werden.
-* **Mitglieder kicken:** Um den Kick Befehl erfolgreich ausführen zu können. Diese Berechtigung kann weggelassen werden, wenn man den Kick Befehl nicht benutzen will.
-* **Nachrichten lesen:** Um auf Befehle zu reagieren. **Diese Berechtigung sollte nicht entfernt werden!**
-* **Nachrichten senden:** Um auf Befehle zu antworten. **Diese Berechtigung sollte nicht entfernt werden!**
-* **Links einbetten:** Um die Nachricht erfolgreich darzustellen. **Diese Berechtigung sollte nicht entfernt werden!**
-* **Reaktionen hinzufügen:** Um Dev Befehle erfolgreich auszuführen. Diese Berechtigung kann entfernt werden. 
+Befehle | Beschreibung
+----------------|--------------
+`help` | Zeigt eine Liste aller öffentlichen Befehle
+`bot-info` | Zeigt dir Infos über den Bot an
+`ping` | Zeigt dir den Ping zwischen Bot und Discord an
+`invite` | Schickt dir einen Einladungslink für den Bot
+`src` | Schickt den GitHub Link zum Bot
+`set-news [Kanal-ID] [Nachrichten-ID]` | Setzt die Nachricht für die News
+`sv-news` | Zeigt dir die News Nachricht
+`sv-info` | Zeigt dir infos über den Server an
+`whois <@User#1234>` | Zeigt dir Infos über User
+`kick [@User#1234]` | Kickt den angegebenen User vom Server
+`register [uplay/steam/epicgames] [Name]` | Verknüpft euren Nickname mit eurem Discord Account
+`uplay <@User#1234/unlink>` | Zeigt euren oder vom User den Uplay Namen an, oder entfernt die Verknüpfung
+`steam <@User#1234/unlink>` | Zeigt euren oder vom User den Steam Namen an, oder entfernt die Verknüpfung
+`epicgames <@User#1234/unlink>` | Zeigt euren oder vom User den Epic Games Namen an, oder entfernt die Verknüpfung
 
 
+Starten
+-------------
+Entweder ihr startet das Script direkt über `python3.8 main.py` oder erstellt eine systemd unit:
+
+    [Unit]
+    Description=CherryBot Discord Bot
+    After=multi-user.target
+    [Service]
+    WorkingDirectory=/home/cherry/CherryBot
+    Environment="PYTHONHASHSEED=0"
+    User=cherry
+    Group=cherry
+    ExecStart=/usr/bin/python3.8 /home/cherry/CherryBot/main.py
+    Type=idle
+    Restart=on-failure
+    RestartSec=15
+    TimeoutStartSec=15
+
+    [Install]
+    WantedBy=multi-user.target
+
+Nach `/etc/systemd/system/discord.service` kopieren und anpassen. Nicht vergessen die Unit zu starten via `sudo systemctl start discord.service` bzw. Autostart via `sudo systemctl enable discord.service`.
 
 
+Einstellungen
+-------------
+Vor dem Start muss im Ordner `config` eine Datei namens `config.py` verändert werden werden:
 
+    TOKEN = "DEIN BOT TOKEN"
+    PREFIX = "&"
+    clientLogout = False
+
+In `games.py` kann man die Titel der "Spiele Presence" anpassen. Platzhalter wie `{guilds}` oder `{members}` sind möglich.
+
+    __games__ = [
+    (discord.ActivityType.playing, 'mit Python'),
+    (discord.ActivityType.watching, 'auf {guilds} Server'),
+    (discord.ActivityType.watching, 'auf {members} Mitglieder'),
+    (discord.ActivityType.listening, '&help')
+    ]
+    __gamesTimer__ = [
+        2 * 60,
+        1 * 35,
+        2 * 27,
+        3 * 23,
+        5 * 9
+    ]
+
+Support
+-------------
+Falls ihr Hilfe benötigt kommt auf meinen Discord Server: `https://discord.gg/ZMDJKUf`
+
+Was ihr benötigt
+-------------
+
+    python = 3.7 oder besser
+    discord.py = 1.0 oder besser
+    aiohttp
+    websockets
+    chardet
+    pytz
+    pillow
+
+License
+-------------
+    MIT License
+
+    Copyright (c) 2020 Dominik Büttner
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
