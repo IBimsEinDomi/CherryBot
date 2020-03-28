@@ -34,7 +34,7 @@ import codecs
 import os
 
 client = discord.Client()
-__version__ = '1.3.2'
+__version__ = '1.3.3'
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 THIS_FILE = os.path.join(THIS_FOLDER, 'MIT.txt')
 mit_license = codecs.open(THIS_FILE, "r", encoding="utf-8")
@@ -733,7 +733,7 @@ async def on_message(message):
                             await asyncio.sleep(0.5)
                             await message.channel.send(embed=embed)
                             return
-                    elif len(args) == 2:
+                    elif len(args) >= 2:
                         try:
                             member = message.mentions[0]
                         except:
@@ -753,7 +753,7 @@ async def on_message(message):
                             await message.channel.trigger_typing()
                             await asyncio.sleep(0.5)
                             await message.channel.send(embed=embed)
-                        elif not member.id in UserInGameName.uplay and len(args) == 2:
+                        elif not member.id in UserInGameName.uplay and len(args) >= 2:
                             embed=discord.Embed(title="", description=member.mention + " muss erst seinen\nAccount mit `" + CONFIG.PREFIX + "register uplay [Name]`\nverknüpfen", color=0x0070FF)
                             embed.set_footer(text="Uplay", icon_url="https://pics.computerbase.de/7/7/5/8/3/logo-256.png")
                             embed.timestamp=datetime.datetime.utcnow()
@@ -816,14 +816,14 @@ async def on_message(message):
                             return
                         else:
                             embed=discord.Embed(title="", description="Du hast keine Verknüpfung für Steam", color=0x091936)
-                            embed.set_footer(text="Uplay", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2000px-Steam_icon_logo.svg.png")
+                            embed.set_footer(text="Steam", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2000px-Steam_icon_logo.svg.png")
                             embed.timestamp=datetime.datetime.utcnow()
                             embed.set_author(name=member.name, icon_url=member.avatar_url)
                             await message.channel.trigger_typing()
                             await asyncio.sleep(0.5)
                             await message.channel.send(embed=embed)
                             return
-                    elif len(args) == 2:
+                    elif len(args) >= 2:
                         try:
                             member = message.mentions[0]
                         except:
@@ -843,9 +843,9 @@ async def on_message(message):
                             await message.channel.trigger_typing()
                             await asyncio.sleep(0.5)
                             await message.channel.send(embed=embed)
-                        elif not member.id in UserInGameName.uplay and len(args) == 2:
+                        elif not member.id in UserInGameName.steam and len(args) >= 2:
                             embed=discord.Embed(title="", description=member.mention + " muss erst seinen\nAccount mit `" + CONFIG.PREFIX + "register steam [Name]`\nverknüpfen", color=0x091936)
-                            embed.set_footer(text="Uplay", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2000px-Steam_icon_logo.svg.png")
+                            embed.set_footer(text="Steam", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2000px-Steam_icon_logo.svg.png")
                             embed.timestamp=datetime.datetime.utcnow()
                             embed.set_author(name=member.name, icon_url=member.avatar_url)
                             await message.channel.trigger_typing()
@@ -853,7 +853,7 @@ async def on_message(message):
                             await message.channel.send(embed=embed)
                         else:
                             embed=discord.Embed(title="", description="Du musst erst deinen\nAccount mit `" + CONFIG.PREFIX + "register steam [Name]`\nverknüpfen", color=0x091936)
-                            embed.set_footer(text="Uplay", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2000px-Steam_icon_logo.svg.png")
+                            embed.set_footer(text="Steam", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2000px-Steam_icon_logo.svg.png")
                             embed.timestamp=datetime.datetime.utcnow()
                             embed.set_author(name=member.name, icon_url=member.avatar_url)
                             await message.channel.trigger_typing()
@@ -906,14 +906,14 @@ async def on_message(message):
                             return
                         else:
                             embed=discord.Embed(title="", description="Du hast keine Verknüpfung für Epic Games", color=0x2F2D2E)
-                            embed.set_footer(text="Uplay", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Epic_Games_logo.svg/2000px-Epic_Games_logo.svg.png")
+                            embed.set_footer(text="Epic Games", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Epic_Games_logo.svg/2000px-Epic_Games_logo.svg.png")
                             embed.timestamp=datetime.datetime.utcnow()
                             embed.set_author(name=member.name, icon_url=member.avatar_url)
                             await message.channel.trigger_typing()
                             await asyncio.sleep(0.5)
                             await message.channel.send(embed=embed)
                             return
-                    elif len(args) == 2:
+                    elif len(args) >= 2:
                         try:
                             member = message.mentions[0]
                         except:
@@ -932,9 +932,9 @@ async def on_message(message):
                             await message.channel.trigger_typing()
                             await asyncio.sleep(0.5)
                             await message.channel.send(embed=embed)
-                        elif not member.id in UserInGameName.uplay and len(args) == 2:
+                        elif not member.id in UserInGameName.epicgames and len(args) >= 2:
                             embed=discord.Embed(title="", description=member.mention + " muss erst seinen\nAccount mit `" + CONFIG.PREFIX + "register epicgames [Name]`\nverknüpfen", color=0x2F2D2E)
-                            embed.set_footer(text="Uplay", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Epic_Games_logo.svg/2000px-Epic_Games_logo.svg.png")
+                            embed.set_footer(text="Epic Games", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Epic_Games_logo.svg/2000px-Epic_Games_logo.svg.png")
                             embed.timestamp=datetime.datetime.utcnow()
                             embed.set_author(name=member.name, icon_url=member.avatar_url)
                             await message.channel.trigger_typing()
@@ -942,7 +942,7 @@ async def on_message(message):
                             await message.channel.send(embed=embed)
                         else:
                             embed=discord.Embed(title="", description="Du musst erst deinen\nAccount mit `" + CONFIG.PREFIX + "register epicgames [Name]`\nverknüpfen", color=0x2F2D2E)
-                            embed.set_footer(text="Uplay", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Epic_Games_logo.svg/2000px-Epic_Games_logo.svg.png")
+                            embed.set_footer(text="Epic Games", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Epic_Games_logo.svg/2000px-Epic_Games_logo.svg.png")
                             embed.timestamp=datetime.datetime.utcnow()
                             embed.set_author(name=member.name, icon_url=member.avatar_url)
                             await message.channel.trigger_typing()
