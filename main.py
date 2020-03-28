@@ -34,7 +34,7 @@ import codecs
 import os
 
 client = discord.Client()
-__version__ = '1.3.3'
+__version__ = '1.4'
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 THIS_FILE = os.path.join(THIS_FOLDER, 'MIT.txt')
 mit_license = codecs.open(THIS_FILE, "r", encoding="utf-8")
@@ -1196,19 +1196,10 @@ async def on_message(message):
             
             #help
                 if message.content.startswith(CONFIG.PREFIX + "help"):
-                    embed = discord.Embed(title="Alle Befehle", color=0xe43d53, description="**" + CONFIG.PREFIX + "bot-info**: Zeigt dir Infos über den Bot an\n\n**"
-                                    + CONFIG.PREFIX + "ping**: Zeigt dir den Ping zwischen Bot und Discord an\n\n**" 
-                                    + CONFIG.PREFIX + "invite**: Schickt dir einen Einladungslink für den Bot\n\n**"
-                                    + CONFIG.PREFIX + "src**: Schickt den GitHub Link zum Bot\n\n**"
-                                    + CONFIG.PREFIX + "set-news [Kanal-ID] [Nachrichten-ID]**: Setzt die Nachricht für die News\n\n**" 
-                                    + CONFIG.PREFIX + "sv-news**: Zeigt dir die News Nachricht\n\n**"
-                                    + CONFIG.PREFIX + "sv-info**: Zeigt dir infos über den Server an\n\n**"
-                                    + CONFIG.PREFIX + "whois <@User#1234>**: Zeigt dir Infos über User\n\n**"
-                                    + CONFIG.PREFIX + "kick [@User#1234]**: Kickt den angegebenen User vom Server\n\n**"
-                                    + CONFIG.PREFIX + "register [uplay/steam/epicgames] [Name]**: Verknüpft euren Nickname mit eurem Discord Account\n\n**"
-                                    + CONFIG.PREFIX + "uplay <@User#1234/unlink>**: Zeigt euren oder vom User den Uplay Namen an, oder entfernt die Verknüpfung\n\n**"
-                                    + CONFIG.PREFIX + "steam <@User#1234/unlink>**: Zeigt euren oder vom User den Steam Namen an, oder entfernt die Verknüpfung\n\n**"
-                                    + CONFIG.PREFIX + "epicgames <@User#1234/unlink>:** Zeigt euren oder vom User den Epic Games Namen an, oder entfernt die Verknüpfung")
+                    embed = discord.Embed(title="", color=0xe43d53, description="[Über CherryBot](https://cherrybot.gitbook.io/cherrybot/)\n"
+                                          + "[Befehle](https://cherrybot.gitbook.io/cherrybot/befehle)\n[FAQ](https://cherrybot.gitbook.io/cherrybot/faq)\n[Lade CherryBot ein](https://discordapp.com/oauth2/authorize?client_id=664831660235292714&scope=bot&response_type=code&redirect_uri=https://discord.gg/ZMDJKUf&permissions=543818)\n"
+                                          + "[CherryBot auf GitHub](https://github.com/IBimsEinMystery/CherryBot)\n[Unterstütze mich](https://www.paypal.me/dominik1711)")
+                    embed.set_author(name="CherryBot Hilfe Menü", icon_url=client.user.avatar_url)
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp=datetime.datetime.utcnow()
                     await message.channel.trigger_typing()
