@@ -197,7 +197,36 @@ async def on_message(message):
                         await message.channel.trigger_typing()
                         await asyncio.sleep(0.5)
                         await message.channel.send(embed=embed)
-                    
+                        
+            #dm
+                if message.content.startswith(CONFIG.PREFIX + "dm"):
+                    args = message.content.split(" ")
+                    try:
+                        dmUserID = message.raw_mentions[0]
+                        dmMessage = message.content.replace(args[0] + " " + args[1], "")
+                        try:
+                            dmEmbed = discord.Embed(title="", description="" + dmMessage, color=random.randint(0, 0xffffff))
+                            dmEmbed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
+                            dmEmbed.timestamp=datetime.datetime.utcnow()
+                            dmEmbed.set_author(name=message.author.name, icon_url=message.author.avatar_url)
+                            sendEmbed = discord.Embed(title="", description="Erfolgreich gesendet", color=0x2ecc71)
+                            await message.channel.trigger_typing()
+                            await asyncio.sleep(0.5)
+                            await client.get_user(dmUserID).send(embed=dmEmbed)
+                            await message.channel.send(embed=sendEmbed)
+                            
+                            
+                        except:
+                            embed = discord.Embed(title="", description="Nachricht konnte nicht zugestellt werden", color=0xff0000)
+                            await message.channel.trigger_typing()
+                            await asyncio.sleep(0.5)
+                            await message.channel.send(embed=embed)
+                    except:
+                        embed = discord.Embed(title="", description="Bitte benutze **" + CONFIG.PREFIX + "dm [@User#1234] [Nachricht]**", color=0xff0000)
+                        await message.channel.trigger_typing()
+                        await asyncio.sleep(0.5)
+                        await message.channel.send(embed=embed)
+                                   
             #stop
                 if message.content.startswith(CONFIG.PREFIX + 'stop'):
                     DateTime = datetime.datetime.now(timezone('Europe/Berlin'))
@@ -286,22 +315,37 @@ async def on_message(message):
                                     + str(DateTime)[8:10] + "." + str(DateTime)[5:7] + "." + str(DateTime.year) + " \xbb "
                     if CONFIG.clientLogout == False:
                         embed = discord.Embed(title="", description="Der Bot wird gestoppt...", color=0xe74c3c)
-                        await client.change_presence(status=discord.Status.do_not_disturb, activity=discord.Game(name="Bot gestoppt"))
-                        CONFIG.clientLogout = True
                         print(__printDateTime + "Bot gestoppt")
-                        await message.channel.trigger_typing()
-                        await asyncio.sleep(0.5)
-                        await message.channel.send(embed=embed)
+                        try:
+                            await message.channel.trigger_typing()
+                            await client.change_presence(status=discord.Status.do_not_disturb, activity=discord.Game(name="Bot gestoppt"))
+                            CONFIG.clientLogout = True
+                            await asyncio.sleep(0.5)
+                            await message.channel.send(embed=embed)
+                        except:
+                            embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                            if not message.author.bot:
+                                message.author.send(embed=embed)
                     else:
                         embed = discord.Embed(title="", description="Der Bot ist schon gestoppt", color=0xff0000)
+                        try:
+                            await message.channel.trigger_typing()
+                            await asyncio.sleep(0.5)
+                            await message.channel.send(embed=embed)
+                        except:
+                            embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                            if not message.author.bot:
+                                message.author.send(embed=embed)
+                else:
+                    embed = discord.Embed(title="", description="Hey " + message.author.mention + ", dafür hast du keine Rechte!", color=0xff0000)
+                    try:
                         await message.channel.trigger_typing()
                         await asyncio.sleep(0.5)
                         await message.channel.send(embed=embed)
-                else:
-                    embed = discord.Embed(title="", description="Hey " + message.author.mention + ", dafür hast du keine Rechte!", color=0xff0000)
-                    await message.channel.trigger_typing()
-                    await asyncio.sleep(0.5)
-                    await message.channel.send(embed=embed)
+                    except:
+                            embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                            if not message.author.bot:
+                                message.author.send(embed=embed)
                 
         #start
             if message.content.startswith(CONFIG.PREFIX + 'start'):
@@ -311,22 +355,37 @@ async def on_message(message):
                                     + str(DateTime)[8:10] + "." + str(DateTime)[5:7] + "." + str(DateTime.year) + " \xbb "
                     if CONFIG.clientLogout == True:
                         embed = discord.Embed(title="", description="Der Bot wird gestartet...", color=0x2ecc71)
-                        client.gamesLoop = asyncio.ensure_future(_randomGame())
-                        CONFIG.clientLogout = False
-                        print(__printDateTime + "Bot gestartet")
-                        await message.channel.trigger_typing()
-                        await asyncio.sleep(0.5)
-                        await message.channel.send(embed=embed)
+                        try:
+                            await message.channel.trigger_typing()
+                            client.gamesLoop = asyncio.ensure_future(_randomGame())
+                            CONFIG.clientLogout = False
+                            print(__printDateTime + "Bot gestartet")
+                            await asyncio.sleep(0.5)
+                            await message.channel.send(embed=embed)
+                        except:
+                            embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                            if not message.author.bot:
+                                message.author.send(embed=embed)
                     else:
                         embed = discord.Embed(title="", description="Der Bot ist schon gestartet", color=0xff0000)
+                        try:
+                            await message.channel.trigger_typing()
+                            await asyncio.sleep(0.5)
+                            await message.channel.send(embed=embed)
+                        except:
+                            embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                            if not message.author.bot:
+                                message.author.send(embed=embed)
+                else:
+                    embed = discord.Embed(title="", description="Hey " + message.author.mention + ", dafür hast du keine Rechte!", color=0xff0000)
+                    try:
                         await message.channel.trigger_typing()
                         await asyncio.sleep(0.5)
                         await message.channel.send(embed=embed)
-                else:
-                    embed = discord.Embed(title="", description="Hey " + message.author.mention + ", dafür hast du keine Rechte!", color=0xff0000)
-                    await message.channel.trigger_typing()
-                    await asyncio.sleep(0.5)
-                    await message.channel.send(embed=embed)
+                    except:
+                            embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                            if not message.author.bot:
+                                message.author.send(embed=embed)
                 
         #logout
             if message.content.startswith(CONFIG.PREFIX + 'logout'):
@@ -334,9 +393,14 @@ async def on_message(message):
                     DateTime = datetime.datetime.now(timezone('Europe/Berlin'))
                     __printDateTime = str(DateTime)[11:13] + ":" + str(DateTime)[14:16] + ":" + str(DateTime)[17:19] + " " \
                                     + str(DateTime)[8:10] + "." + str(DateTime)[5:7] + "." + str(DateTime.year) + " \xbb "
-                    await message.add_reaction("\U00002705")
-                    await message.add_reaction("\U0000274c")
-                    client.logoutMessageID = message.id
+                    try:
+                        await message.add_reaction("\U00002705")
+                        await message.add_reaction("\U0000274c")
+                        client.logoutMessageID = message.id
+                    except:
+                            embed = discord.Embed(title="", description="Ich habe keine Rechte um Reaktionen zu benutzen. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                            if not message.author.bot:
+                                message.author.send(embed=embed)
                     
                     @client.event
                     async def on_reaction_add(reaction, user):
@@ -351,16 +415,26 @@ async def on_message(message):
                                     if user.id == client.AppInfo.owner.id:
                                         if reaction.emoji == '\U00002705':
                                             logOut = discord.Embed(title="", color=0xe74c3c, description="Abmeldung erfolgt")
-                                            await message.channel.send(embed=logOut)
-                                            print(__printDateTime + "Abmeldung")
-                                            client.logoutMessageID = "NOTHING"
-                                            await asyncio.sleep(2)
-                                            await client.change_presence(status=discord.Status.offline)
-                                            await client.logout()
+                                            try:
+                                                await message.channel.send(embed=logOut)
+                                                print(__printDateTime + "Abmeldung")
+                                                client.logoutMessageID = "NOTHING"
+                                                await asyncio.sleep(2)
+                                                await client.change_presence(status=discord.Status.offline)
+                                                await client.logout()
+                                            except:
+                                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                                if not message.author.bot:
+                                                    message.author.send(embed=embed)
                                         if reaction.emoji == '\U0000274c':
                                             logOutCancel = discord.Embed(title="", color=0xe74c3c, description="Abmeldung abgebrochen")
-                                            await message.channel.send(embed=logOutCancel)
-                                            client.logoutMessageID = "NOTHING"
+                                            try:
+                                                await message.channel.send(embed=logOutCancel)
+                                                client.logoutMessageID = "NOTHING"
+                                            except:
+                                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                                if not message.author.bot:
+                                                    message.author.send(embed=embed)
                                 else:
                                     if reaction.emoji == '\U00002705':
                                         await message.remove_reaction('\U00002705', user)
@@ -368,9 +442,14 @@ async def on_message(message):
                                         await message.remove_reaction('\U0000274c', user)
                 else:
                     embed = discord.Embed(title="", description="Hey " + message.author.mention + ", dafür hast du keine Rechte!", color=0xff0000)
-                    await message.channel.trigger_typing()
-                    await asyncio.sleep(0.5)
-                    await message.channel.send(embed=embed)
+                    try:
+                        await message.channel.trigger_typing()
+                        await asyncio.sleep(0.5)
+                        await message.channel.send(embed=embed)
+                    except:
+                        embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                        if not message.author.bot:
+                            message.author.send(embed=embed)
                                 
         #BotAn
             if CONFIG.clientLogout == False:
@@ -388,25 +467,45 @@ async def on_message(message):
                                 embed.set_footer(text="Server News von " + message.guild.name, icon_url=client.user.avatar_url, )
                                 embed.set_thumbnail(url=message.guild.icon_url)
                                 embed.timestamp = datetime.datetime.utcnow()
+                                try:
+                                    await message.channel.trigger_typing()
+                                    await asyncio.sleep(0.5)
+                                    await message.channel.send(embed=embed)
+                                except:
+                                    embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                    if not message.author.bot:
+                                        message.author.send(embed=embed)
+                            except:
+                                embed = discord.Embed(title="", description="Diese Nachricht wurde gelöscht!", color=0xff0000)
+                                try:
+                                    await message.channel.trigger_typing()
+                                    await asyncio.sleep(0.5)
+                                    await message.channel.send(embed=embed)
+                                except:
+                                    embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                    if not message.author.bot:
+                                        message.author.send(embed=embed)
+                        except:
+                            embed = discord.Embed(title="", description="Dieser Channel wurde gelöscht!", color=0xff0000)
+                            try:
                                 await message.channel.trigger_typing()
                                 await asyncio.sleep(0.5)
                                 await message.channel.send(embed=embed)
                             except:
-                                embed = discord.Embed(title="", description="Diese Nachricht wurde gelöscht!", color=0xff0000)
-                                await message.channel.trigger_typing()
-                                await asyncio.sleep(0.5)
-                                await message.channel.send(embed=embed)
-                        except:
-                            embed = discord.Embed(title="", description="Dieser Channel wurde gelöscht!", color=0xff0000)
+                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                if not message.author.bot:
+                                    message.author.send(embed=embed)
+                    else:
+                        embed = discord.Embed(title="", description="Es wurde keine Nachricht eingestellt!", color=0xff0000)
+                        try:
                             await message.channel.trigger_typing()
                             await asyncio.sleep(0.5)
                             await message.channel.send(embed=embed)
-                    else:
-                        embed = discord.Embed(title="", description="Es wurde keine Nachricht eingestellt!", color=0xff0000)
-                        await message.channel.trigger_typing()
-                        await asyncio.sleep(0.5)
-                        await message.channel.send(embed=embed)
-            
+                        except:
+                            embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                            if not message.author.bot:
+                                message.author.send(embed=embed)
+    
             #set-news
                 if message.content.startswith(CONFIG.PREFIX + 'set-news'):
                     if message.author.guild_permissions.manage_guild:
@@ -429,9 +528,14 @@ async def on_message(message):
                                                     __newDictionary = str(__newDictionary).replace(",", ",\n")
                                                     __newDictionary = str(__newDictionary).replace("}", "\n}")
                                                     sv_news.write("newsID = " + str(__newDictionary))
-                                                    await message.channel.trigger_typing()
-                                                    await asyncio.sleep(0.5)
-                                                    await message.channel.send(embed=embed)
+                                                    try:
+                                                        await message.channel.trigger_typing()
+                                                        await asyncio.sleep(0.5)
+                                                        await message.channel.send(embed=embed)
+                                                    except:
+                                                        embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                                        if not message.author.bot:
+                                                            message.author.send(embed=embed)
                                                 except:
                                                     embed = discord.Embed(title="", description=":white_check_mark: Erfolgreich gesetzt", color=0x2ecc71)
                                                     SV_NEWS.newsID.update({message.guild.id: str(channelID) + "(" + str(messageID) + ")"})
@@ -440,44 +544,84 @@ async def on_message(message):
                                                     __newDictionary = str(__newDictionary).replace(",", ",\n")
                                                     __newDictionary = str(__newDictionary).replace("}", "\n}")
                                                     sv_news.write("newsID = " + str(__newDictionary))
+                                                    try:
+                                                        await message.channel.trigger_typing()
+                                                        await asyncio.sleep(0.5)
+                                                        await message.channel.send(embed=embed)
+                                                    except:
+                                                        embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                                        if not message.author.bot:
+                                                            message.author.send(embed=embed)
+                                            except:
+                                                embed = discord.Embed(title="", description="Konfig konnte nicht gespeichert werden!", color=0xff0000)
+                                                try:
                                                     await message.channel.trigger_typing()
                                                     await asyncio.sleep(0.5)
                                                     await message.channel.send(embed=embed)
-                                            except:
-                                                embed = discord.Embed(title="", description="Konfig konnte nicht gespeichert werden!", color=0xff0000)
+                                                except:
+                                                    embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                                    if not message.author.bot:
+                                                        message.author.send(embed=embed)
+                                        except:
+                                            embed = discord.Embed(title="", description="Datei wurde nicht gefunden!", color=0xff0000)
+                                            try:
                                                 await message.channel.trigger_typing()
                                                 await asyncio.sleep(0.5)
                                                 await message.channel.send(embed=embed)
-                                        except:
-                                            embed = discord.Embed(title="", description="Datei wurde nicht gefunden!", color=0xff0000)
+                                            except:
+                                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                                if not message.author.bot:
+                                                    message.author.send(embed=embed)
+                                    except:
+                                        embed = discord.Embed(title="", description="Die Nachrichten-ID ist ungültig!", color=0xff0000)
+                                        try:
                                             await message.channel.trigger_typing()
                                             await asyncio.sleep(0.5)
                                             await message.channel.send(embed=embed)
-                                    except:
-                                        embed = discord.Embed(title="", description="Die Nachrichten-ID ist ungültig!", color=0xff0000)
+                                        except:
+                                            embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                            if not message.author.bot:
+                                                message.author.send(embed=embed)
+                                else:
+                                    embed = discord.Embed(title="", description="Die Kanal-ID ist ungültig!", color=0xff0000)
+                                    try:
                                         await message.channel.trigger_typing()
                                         await asyncio.sleep(0.5)
                                         await message.channel.send(embed=embed)
-                                else:
-                                    embed = discord.Embed(title="", description="Die Kanal-ID ist ungültig!", color=0xff0000)
+                                    except:
+                                        embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                        if not message.author.bot:
+                                            message.author.send(embed=embed)
+                            else:
+                                embed = discord.Embed(title="", description="Bitte benutze **" + CONFIG.PREFIX + "set-news [Kanal-ID] [Nachrichten-ID]**", color=0xff0000)
+                                try:
                                     await message.channel.trigger_typing()
                                     await asyncio.sleep(0.5)
                                     await message.channel.send(embed=embed)
-                            else:
-                                embed = discord.Embed(title="", description="Bitte benutze **" + CONFIG.PREFIX + "set-news [Kanal-ID] [Nachrichten-ID]**", color=0xff0000)
+                                except:
+                                    embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                    if not message.author.bot:
+                                        message.author.send(embed=embed)
+                        else:
+                            embed = discord.Embed(title="", description="Bitte benutze **" + CONFIG.PREFIX + "set-news [Kanal-ID] [Nachrichten-ID]**", color=0xff0000)
+                            try:
                                 await message.channel.trigger_typing()
                                 await asyncio.sleep(0.5)
                                 await message.channel.send(embed=embed)
-                        else:
-                            embed = discord.Embed(title="", description="Bitte benutze **" + CONFIG.PREFIX + "set-news [Kanal-ID] [Nachrichten-ID]**", color=0xff0000)
+                            except:
+                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                if not message.author.bot:
+                                    message.author.send(embed=embed)
+                    else:
+                        embed = discord.Embed(title="", description="Hey " + message.author.mention + ", dafür hast du keine Rechte!", color=0xff0000)
+                        try:
                             await message.channel.trigger_typing()
                             await asyncio.sleep(0.5)
                             await message.channel.send(embed=embed)
-                    else:
-                        embed = discord.Embed(title="", description="Hey " + message.author.mention + ", dafür hast du keine Rechte!", color=0xff0000)
-                        await message.channel.trigger_typing()
-                        await asyncio.sleep(0.5)
-                        await message.channel.send(embed=embed)
+                        except:
+                            embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                            if not message.author.bot:
+                                message.author.send(embed=embed)
                         
             #bot-info
                 if message.content.startswith(CONFIG.PREFIX + "bot-info"):
@@ -490,9 +634,14 @@ async def on_message(message):
                     embed.set_thumbnail(url=client.user.avatar_url)
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp = datetime.datetime.utcnow()
-                    await message.channel.trigger_typing()
-                    await asyncio.sleep(0.5)
-                    await message.channel.send(embed=embed)
+                    try:
+                        await message.channel.trigger_typing()
+                        await asyncio.sleep(0.5)
+                        await message.channel.send(embed=embed)
+                    except:
+                        embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                        if not message.author.bot:
+                            message.author.send(embed=embed)
                     
             #sv-info
                 if message.content.startswith(CONFIG.PREFIX + "sv-info"):
@@ -519,9 +668,14 @@ async def on_message(message):
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.set_thumbnail(url=message.guild.icon_url)
                     embed.timestamp = datetime.datetime.utcnow()
-                    await message.channel.trigger_typing()
-                    await asyncio.sleep(0.5)
-                    await message.channel.send(embed=embed)
+                    try:
+                        await message.channel.trigger_typing()
+                        await asyncio.sleep(0.5)
+                        await message.channel.send(embed=embed)
+                    except:
+                        embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                        if not message.author.bot:
+                            message.author.send(embed=embed)
             
             #whois
                 if message.content.startswith(CONFIG.PREFIX + "whois"):
@@ -594,29 +748,44 @@ async def on_message(message):
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp = datetime.datetime.utcnow()
                     embed.set_author(name=member, icon_url=member.avatar_url)
-                    await message.channel.trigger_typing()
-                    await asyncio.sleep(0.5)
-                    await message.channel.send(embed=embed)
+                    try:
+                        await message.channel.trigger_typing()
+                        await asyncio.sleep(0.5)
+                        await message.channel.send(embed=embed)
+                    except:
+                        embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                        if not message.author.bot:
+                            message.author.send(embed=embed)
             
             #ping
                 if message.content.startswith(CONFIG.PREFIX + "ping"):
                     latency = str(client.latency)[0:4]
                     embed=discord.Embed(title="", description="Bot Ping = " + latency + "ms", color=0xe43d53)
-                    await message.channel.trigger_typing()
-                    await asyncio.sleep(0.5)
-                    await message.channel.send(embed=embed) 
+                    try:
+                        await message.channel.trigger_typing()
+                        await asyncio.sleep(0.5)
+                        await message.channel.send(embed=embed)
+                    except:
+                        embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                        if not message.author.bot:
+                            message.author.send(embed=embed)
                     
             #invite
                 if message.content.startswith(CONFIG.PREFIX + "invite"):
                     embed=discord.Embed(title="", description=message.author.mention + ", der Einladungslink wurde dir zugeschickt.", color=0xe43d53)
-                    await message.channel.trigger_typing()
-                    await asyncio.sleep(0.5)
-                    await message.channel.send(embed=embed)
-                    embed = discord.Embed(title="", description="Hier kannst du mich zu deinem Server einladen:\nhttps://bit.ly/2wlXDC3", color=0xe43d53)
-                    embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
-                    embed.timestamp = datetime.datetime.utcnow()
-                    if not message.author.bot:
-                        await message.author.send(embed=embed)
+                    try:
+                        await message.channel.trigger_typing()
+                        await asyncio.sleep(0.5)
+                        await message.channel.send(embed=embed)
+                        embed = discord.Embed(title="", description="Hier kannst du mich zu deinem Server einladen:\nhttps://bit.ly/2wlXDC3", color=0xe43d53)
+                        embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
+                        embed.timestamp = datetime.datetime.utcnow()
+                        if not message.author.bot:
+                            await message.author.send(embed=embed)
+                    except:
+                        embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                        if not message.author.bot:
+                            message.author.send(embed=embed)
                         
             #src
                 if message.content.startswith(CONFIG.PREFIX + "src"):
@@ -626,9 +795,14 @@ async def on_message(message):
                                                                 "\n```" + mit_license.read() + "```", color=0xe43d53)
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp = datetime.datetime.utcnow()
-                    await message.channel.trigger_typing()
-                    await asyncio.sleep(0.5)
-                    await message.channel.send(embed=embed)
+                    try:
+                        await message.channel.trigger_typing()
+                        await asyncio.sleep(0.5)
+                        await message.channel.send(embed=embed)
+                    except:
+                        embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                        if not message.author.bot:
+                            message.author.send(embed=embed)
             
             #kick
                 if message.content.startswith(CONFIG.PREFIX + "kick"):
@@ -647,46 +821,86 @@ async def on_message(message):
                                         if not str(message.guild.owner.id) in message.mentions:
                                             try:
                                                 embed=discord.Embed(title="", description=":white_check_mark: Du hast " + memberKick.mention + " gekickt", color=0x2ecc71)
-                                                await memberKick.kick(reason=str(message.author) + " hat " + str(memberKick) + " entfernt")
-                                                await message.channel.trigger_typing()
-                                                await asyncio.sleep(0.5)
-                                                await message.channel.send(embed=embed)
-                                                print(__printDateTime + str(author) + " hat " + str(memberKick) + " von " + message.guild.name + "(" +  str(message.guild.id) + ")" + " gekickt")
+                                                try:
+                                                    await memberKick.kick(reason=str(message.author) + " hat " + str(memberKick) + " entfernt")
+                                                    await message.channel.trigger_typing()
+                                                    await asyncio.sleep(0.5)
+                                                    await message.channel.send(embed=embed)
+                                                    print(__printDateTime + str(author) + " hat " + str(memberKick) + " von " + message.guild.name + "(" +  str(message.guild.id) + ")" + " gekickt")
+                                                except:
+                                                    embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                                    if not message.author.bot:
+                                                        message.author.send(embed=embed)
                                             except:
                                                 embed=discord.Embed(title="", description="Ich habe keine Rechte zum kicken", color=0xff0000)
+                                                try:
+                                                    await message.channel.trigger_typing()
+                                                    await asyncio.sleep(0.5)
+                                                    await message.channel.send(embed=embed)
+                                                except:
+                                                    embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                                    if not message.author.bot:
+                                                        message.author.send(embed=embed)
+                                        else:
+                                            embed=discord.Embed(title="", description="Du kannst denn Besitzer dieses Servers nicht kicken!", color=0xff0000)
+                                            try:
                                                 await message.channel.trigger_typing()
                                                 await asyncio.sleep(0.5)
                                                 await message.channel.send(embed=embed)
-                                        else:
-                                            embed=discord.Embed(title="", description="Du kannst denn Besitzer dieses Servers nicht kicken!", color=0xff0000)
+                                            except:
+                                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                                if not message.author.bot:
+                                                    message.author.send(embed=embed)
+                                    except:
+                                        embed=discord.Embed(title="", description="Du kannst denn Besitzer dieses Servers nicht kicken!", color=0xff0000)
+                                        try:
                                             await message.channel.trigger_typing()
                                             await asyncio.sleep(0.5)
                                             await message.channel.send(embed=embed)
-                                    except:
-                                        embed=discord.Embed(title="", description="Du kannst denn Besitzer dieses Servers nicht kicken!", color=0xff0000)
+                                        except:
+                                            embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                            if not message.author.bot:
+                                                message.author.send(embed=embed)
+                                else:
+                                    embed=discord.Embed(title="", description="Ich kann mich nicht selber kicken!", color=0xff0000)
+                                    try:
                                         await message.channel.trigger_typing()
                                         await asyncio.sleep(0.5)
                                         await message.channel.send(embed=embed)
-                                else:
-                                    embed=discord.Embed(title="", description="Ich kann mich nicht selber kicken!", color=0xff0000)
+                                    except:
+                                        embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                        if not message.author.bot:
+                                            message.author.send(embed=embed)
+                            except:
+                                embed=discord.Embed(title="", description="Ich kann mich nicht selber kicken!", color=0xff0000)
+                                try:
                                     await message.channel.trigger_typing()
                                     await asyncio.sleep(0.5)
                                     await message.channel.send(embed=embed)
-                            except:
-                                embed=discord.Embed(title="", description="Ich kann mich nicht selber kicken!", color=0xff0000)
+                                except:
+                                    embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                    if not message.author.bot:
+                                        message.author.send(embed=embed)
+                        except:
+                            embed=discord.Embed(title="", description="Bitte benutze **" + CONFIG.PREFIX + "kick [@User#1234]**!", color=0xff0000)
+                            try:
                                 await message.channel.trigger_typing()
                                 await asyncio.sleep(0.5)
                                 await message.channel.send(embed=embed)
-                        except:
-                            embed=discord.Embed(title="", description="Bitte benutze **" + CONFIG.PREFIX + "kick [@User#1234]**!", color=0xff0000)
+                            except:
+                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                if not message.author.bot:
+                                    message.author.send(embed=embed)
+                    else:
+                        embed = discord.Embed(title="", description="Hey " + message.author.mention + ", dafür hast du keine Rechte!", color=0xff0000)
+                        try:
                             await message.channel.trigger_typing()
                             await asyncio.sleep(0.5)
                             await message.channel.send(embed=embed)
-                    else:
-                        embed = discord.Embed(title="", description="Hey " + message.author.mention + ", dafür hast du keine Rechte!", color=0xff0000)
-                        await message.channel.trigger_typing()
-                        await asyncio.sleep(0.5)
-                        await message.channel.send(embed=embed)
+                        except:
+                            embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                            if not message.author.bot:
+                                message.author.send(embed=embed)
                 
             #uplay
                 if(message.content.startswith(CONFIG.PREFIX + "uplay")):
@@ -715,32 +929,52 @@ async def on_message(message):
                                 uplay.write("\nsteam = " + newFileSteam)
                                 uplay.write("\nepicgames = " + newFileEpic)
                                 embed = discord.Embed(title="", description="Die Verknüpfung wurde gelöscht", color=0x2ecc71)
-                                await message.channel.send(embed=embed)
+                                try:
+                                    await message.channel.send(embed=embed)
+                                except:
+                                    embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                    if not message.author.bot:
+                                        message.author.send(embed=embed)
                             except:
                                 embed=discord.Embed(title="", description="Es trat ein Fehler auf!\nBitte versuche es später erneut", color=0xff0000)
                                 embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                                 embed.timestamp=datetime.datetime.utcnow()
-                                await message.channel.trigger_typing()
-                                await asyncio.sleep(0.5)
-                                await message.channel.send(embed=embed)
+                                try:
+                                    await message.channel.trigger_typing()
+                                    await asyncio.sleep(0.5)
+                                    await message.channel.send(embed=embed)
+                                except:
+                                    embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                    if not message.author.bot:
+                                        message.author.send(embed=embed)
                             return
                         else:
                             embed=discord.Embed(title="", description="Du hast keine Verknüpfung für Uplay", color=0x0070FF)
                             embed.set_footer(text="Uplay", icon_url="https://pics.computerbase.de/7/7/5/8/3/logo-256.png")
                             embed.timestamp=datetime.datetime.utcnow()
                             embed.set_author(name=member.name, icon_url=member.avatar_url)
-                            await message.channel.trigger_typing()
-                            await asyncio.sleep(0.5)
-                            await message.channel.send(embed=embed)
+                            try:
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
+                                await message.channel.send(embed=embed)
+                            except:
+                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                if not message.author.bot:
+                                    message.author.send(embed=embed)
                             return
                     elif len(args) >= 2:
                         try:
                             member = message.mentions[0]
                         except:
                             embed = discord.Embed(title="", description="Bitte benutze **" + CONFIG.PREFIX + "uplay <@User#1234/unlink>**", color=0xff0000)
-                            await message.channel.trigger_typing()
-                            await asyncio.sleep(0.5)
-                            await message.channel.send(embed=embed)
+                            try:
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
+                                await message.channel.send(embed=embed)
+                            except:
+                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                if not message.author.bot:
+                                    message.author.send(embed=embed)
                             return
                     
                     if not client.user.id == member.id:
@@ -750,33 +984,53 @@ async def on_message(message):
                             embed.set_footer(text="Uplay", icon_url="https://pics.computerbase.de/7/7/5/8/3/logo-256.png")
                             embed.timestamp=datetime.datetime.utcnow()
                             embed.set_author(name=member.name, icon_url=member.avatar_url)
-                            await message.channel.trigger_typing()
-                            await asyncio.sleep(0.5)
-                            await message.channel.send(embed=embed)
+                            try:
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
+                                await message.channel.send(embed=embed)
+                            except:
+                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                if not message.author.bot:
+                                    message.author.send(embed=embed)
                         elif not member.id in UserInGameName.uplay and len(args) >= 2:
                             embed=discord.Embed(title="", description=member.mention + " muss erst seinen\nAccount mit `" + CONFIG.PREFIX + "register uplay [Name]`\nverknüpfen", color=0x0070FF)
                             embed.set_footer(text="Uplay", icon_url="https://pics.computerbase.de/7/7/5/8/3/logo-256.png")
                             embed.timestamp=datetime.datetime.utcnow()
                             embed.set_author(name=member.name, icon_url=member.avatar_url)
-                            await message.channel.trigger_typing()
-                            await asyncio.sleep(0.5)
-                            await message.channel.send(embed=embed)
+                            try:
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
+                                await message.channel.send(embed=embed)
+                            except:
+                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                if not message.author.bot:
+                                    message.author.send(embed=embed)
                         else:
                             embed=discord.Embed(title="", description="Du musst erst deinen\nAccount mit `" + CONFIG.PREFIX + "register uplay [Name]`\nverknüpfen", color=0x0070FF)
                             embed.set_footer(text="Uplay", icon_url="https://pics.computerbase.de/7/7/5/8/3/logo-256.png")
                             embed.timestamp=datetime.datetime.utcnow()
                             embed.set_author(name=member.name, icon_url=member.avatar_url)
-                            await message.channel.trigger_typing()
-                            await asyncio.sleep(0.5)
-                            await message.channel.send(embed=embed)
+                            try:
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
+                                await message.channel.send(embed=embed)
+                            except:
+                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                if not message.author.bot:
+                                    message.author.send(embed=embed)
                     else:
                         embed=discord.Embed(title="", description="Mich gibt es nicht auf Uplay", color=0x0070FF)
                         embed.set_footer(text="Uplay", icon_url="https://pics.computerbase.de/7/7/5/8/3/logo-256.png")
                         embed.timestamp=datetime.datetime.utcnow()
                         embed.set_author(name=client.user.name, icon_url=client.user.avatar_url)
-                        await message.channel.trigger_typing()
-                        await asyncio.sleep(0.5)
-                        await message.channel.send(embed=embed)
+                        try:
+                            await message.channel.trigger_typing()
+                            await asyncio.sleep(0.5)
+                            await message.channel.send(embed=embed)
+                        except:
+                            embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                            if not message.author.bot:
+                                message.author.send(embed=embed)
                       
             #steam        
                 if(message.content.startswith(CONFIG.PREFIX + "steam")):
@@ -805,32 +1059,52 @@ async def on_message(message):
                                 steam.write("\nsteam = " + newFileSteam)
                                 steam.write("\nepicgames = " + newFileEpic)
                                 embed = discord.Embed(title="", description="Die Verknüpfung wurde gelöscht", color=0x2ecc71)
-                                await message.channel.send(embed=embed)
+                                try:
+                                    await message.channel.send(embed=embed)
+                                except:
+                                    embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                    if not message.author.bot:
+                                        message.author.send(embed=embed)
                             except:
                                 embed=discord.Embed(title="", description="Es trat ein Fehler auf!\nBitte versuche es später erneut", color=0xff0000)
                                 embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                                 embed.timestamp=datetime.datetime.utcnow()
-                                await message.channel.trigger_typing()
-                                await asyncio.sleep(0.5)
-                                await message.channel.send(embed=embed)
+                                try:
+                                    await message.channel.trigger_typing()
+                                    await asyncio.sleep(0.5)
+                                    await message.channel.send(embed=embed)
+                                except:
+                                    embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                    if not message.author.bot:
+                                        message.author.send(embed=embed)
                             return
                         else:
                             embed=discord.Embed(title="", description="Du hast keine Verknüpfung für Steam", color=0x091936)
                             embed.set_footer(text="Steam", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2000px-Steam_icon_logo.svg.png")
                             embed.timestamp=datetime.datetime.utcnow()
                             embed.set_author(name=member.name, icon_url=member.avatar_url)
-                            await message.channel.trigger_typing()
-                            await asyncio.sleep(0.5)
-                            await message.channel.send(embed=embed)
+                            try:
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
+                                await message.channel.send(embed=embed)
+                            except:
+                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                if not message.author.bot:
+                                    message.author.send(embed=embed)
                             return
                     elif len(args) >= 2:
                         try:
                             member = message.mentions[0]
                         except:
                             embed = discord.Embed(title="", description="Bitte benutze **" + CONFIG.PREFIX + "steam <@User#1234/unlink>**", color=0xff0000)
-                            await message.channel.trigger_typing()
-                            await asyncio.sleep(0.5)
-                            await message.channel.send(embed=embed)
+                            try:
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
+                                await message.channel.send(embed=embed)
+                            except:
+                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                if not message.author.bot:
+                                    message.author.send(embed=embed)
                             return
                     
                     if not client.user.id == member.id:
@@ -840,33 +1114,53 @@ async def on_message(message):
                             embed.set_footer(text="Steam", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2000px-Steam_icon_logo.svg.png")
                             embed.timestamp=datetime.datetime.utcnow()
                             embed.set_author(name=member.name, icon_url=member.avatar_url)
-                            await message.channel.trigger_typing()
-                            await asyncio.sleep(0.5)
-                            await message.channel.send(embed=embed)
+                            try:
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
+                                await message.channel.send(embed=embed)
+                            except:
+                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                if not message.author.bot:
+                                    message.author.send(embed=embed)
                         elif not member.id in UserInGameName.steam and len(args) >= 2:
                             embed=discord.Embed(title="", description=member.mention + " muss erst seinen\nAccount mit `" + CONFIG.PREFIX + "register steam [Name]`\nverknüpfen", color=0x091936)
                             embed.set_footer(text="Steam", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2000px-Steam_icon_logo.svg.png")
                             embed.timestamp=datetime.datetime.utcnow()
                             embed.set_author(name=member.name, icon_url=member.avatar_url)
-                            await message.channel.trigger_typing()
-                            await asyncio.sleep(0.5)
-                            await message.channel.send(embed=embed)
+                            try:
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
+                                await message.channel.send(embed=embed)
+                            except:
+                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                if not message.author.bot:
+                                    message.author.send(embed=embed)
                         else:
                             embed=discord.Embed(title="", description="Du musst erst deinen\nAccount mit `" + CONFIG.PREFIX + "register steam [Name]`\nverknüpfen", color=0x091936)
                             embed.set_footer(text="Steam", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2000px-Steam_icon_logo.svg.png")
                             embed.timestamp=datetime.datetime.utcnow()
                             embed.set_author(name=member.name, icon_url=member.avatar_url)
-                            await message.channel.trigger_typing()
-                            await asyncio.sleep(0.5)
-                            await message.channel.send(embed=embed)
+                            try:
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
+                                await message.channel.send(embed=embed)
+                            except:
+                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                if not message.author.bot:
+                                    message.author.send(embed=embed)
                     else:
                         embed=discord.Embed(title="", description="Mich gibt es nicht auf Steam", color=0x091936)
                         embed.set_footer(text="Steam", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2000px-Steam_icon_logo.svg.png")
                         embed.timestamp=datetime.datetime.utcnow()
                         embed.set_author(name=client.user.name, icon_url=client.user.avatar_url)
-                        await message.channel.trigger_typing()
-                        await asyncio.sleep(0.5)
-                        await message.channel.send(embed=embed)
+                        try:
+                            await message.channel.trigger_typing()
+                            await asyncio.sleep(0.5)
+                            await message.channel.send(embed=embed)
+                        except:
+                            embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                            if not message.author.bot:
+                                message.author.send(embed=embed)
                     
             #epicgames
                 if(message.content.startswith(CONFIG.PREFIX + "epicgames")):
@@ -895,32 +1189,52 @@ async def on_message(message):
                                 epic.write("\nsteam = " + newFileSteam)
                                 epic.write("\nepicgames = " + newFileEpic)
                                 embed = discord.Embed(title="", description="Die Verknüpfung wurde gelöscht", color=0x2ecc71)
-                                await message.channel.send(embed=embed)
+                                try:
+                                    await message.channel.send(embed=embed)
+                                except:
+                                    embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                    if not message.author.bot:
+                                        message.author.send(embed=embed)
                             except:
                                 embed=discord.Embed(title="", description="Es trat ein Fehler auf!\nBitte versuche es später erneut", color=0xff0000)
                                 embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                                 embed.timestamp=datetime.datetime.utcnow()
-                                await message.channel.trigger_typing()
-                                await asyncio.sleep(0.5)
-                                await message.channel.send(embed=embed)
+                                try:
+                                    await message.channel.trigger_typing()
+                                    await asyncio.sleep(0.5)
+                                    await message.channel.send(embed=embed)
+                                except:
+                                    embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                    if not message.author.bot:
+                                        message.author.send(embed=embed)
                             return
                         else:
                             embed=discord.Embed(title="", description="Du hast keine Verknüpfung für Epic Games", color=0x2F2D2E)
                             embed.set_footer(text="Epic Games", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Epic_Games_logo.svg/2000px-Epic_Games_logo.svg.png")
                             embed.timestamp=datetime.datetime.utcnow()
                             embed.set_author(name=member.name, icon_url=member.avatar_url)
-                            await message.channel.trigger_typing()
-                            await asyncio.sleep(0.5)
-                            await message.channel.send(embed=embed)
+                            try:
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
+                                await message.channel.send(embed=embed)
+                            except:
+                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                if not message.author.bot:
+                                    message.author.send(embed=embed)
                             return
                     elif len(args) >= 2:
                         try:
                             member = message.mentions[0]
                         except:
                             embed = discord.Embed(title="", description="Bitte benutze **" + CONFIG.PREFIX + "epicgames <@User#1234>**", color=0xff0000)
-                            await message.channel.trigger_typing()
-                            await asyncio.sleep(0.5)
-                            await message.channel.send(embed=embed)
+                            try:
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
+                                await message.channel.send(embed=embed)
+                            except:
+                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                if not message.author.bot:
+                                    message.author.send(embed=embed)
                             return
                     if not client.user.id == member.id:
                         if member.id in UserInGameName.epicgames:
@@ -929,33 +1243,53 @@ async def on_message(message):
                             embed.set_footer(text="Epic Games", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Epic_Games_logo.svg/2000px-Epic_Games_logo.svg.png")
                             embed.timestamp=datetime.datetime.utcnow()
                             embed.set_author(name=member.name, icon_url=member.avatar_url)
-                            await message.channel.trigger_typing()
-                            await asyncio.sleep(0.5)
-                            await message.channel.send(embed=embed)
+                            try:
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
+                                await message.channel.send(embed=embed)
+                            except:
+                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                if not message.author.bot:
+                                    message.author.send(embed=embed)
                         elif not member.id in UserInGameName.epicgames and len(args) >= 2:
                             embed=discord.Embed(title="", description=member.mention + " muss erst seinen\nAccount mit `" + CONFIG.PREFIX + "register epicgames [Name]`\nverknüpfen", color=0x2F2D2E)
                             embed.set_footer(text="Epic Games", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Epic_Games_logo.svg/2000px-Epic_Games_logo.svg.png")
                             embed.timestamp=datetime.datetime.utcnow()
                             embed.set_author(name=member.name, icon_url=member.avatar_url)
-                            await message.channel.trigger_typing()
-                            await asyncio.sleep(0.5)
-                            await message.channel.send(embed=embed)
+                            try:
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
+                                await message.channel.send(embed=embed)
+                            except:
+                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                if not message.author.bot:
+                                    message.author.send(embed=embed)
                         else:
                             embed=discord.Embed(title="", description="Du musst erst deinen\nAccount mit `" + CONFIG.PREFIX + "register epicgames [Name]`\nverknüpfen", color=0x2F2D2E)
                             embed.set_footer(text="Epic Games", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Epic_Games_logo.svg/2000px-Epic_Games_logo.svg.png")
                             embed.timestamp=datetime.datetime.utcnow()
                             embed.set_author(name=member.name, icon_url=member.avatar_url)
-                            await message.channel.trigger_typing()
-                            await asyncio.sleep(0.5)
-                            await message.channel.send(embed=embed)
+                            try:
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
+                                await message.channel.send(embed=embed)
+                            except:
+                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                if not message.author.bot:
+                                    message.author.send(embed=embed)
                     else:
                         embed=discord.Embed(title="", description="Mich gibt es nicht auf Epic Games", color=0x2F2D2E)
                         embed.set_footer(text="Epic Games", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Epic_Games_logo.svg/2000px-Epic_Games_logo.svg.png")
                         embed.timestamp=datetime.datetime.utcnow()
                         embed.set_author(name=client.user.name, icon_url=client.user.avatar_url)
-                        await message.channel.trigger_typing()
-                        await asyncio.sleep(0.5)
-                        await message.channel.send(embed=embed)
+                        try:
+                            await message.channel.trigger_typing()
+                            await asyncio.sleep(0.5)
+                            await message.channel.send(embed=embed)
+                        except:
+                            embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                            if not message.author.bot:
+                                message.author.send(embed=embed)
                     
             #register
                 if(message.content.startswith(CONFIG.PREFIX + "register")):
@@ -988,9 +1322,14 @@ async def on_message(message):
                                             embed=discord.Embed(title="", description=":white_check_mark: Erfolgreich gesetzt", color=0x2ecc71)
                                             embed.set_footer(text="Uplay: " + args[2], icon_url="https://pics.computerbase.de/7/7/5/8/3/logo-256.png")
                                             embed.timestamp=datetime.datetime.utcnow()
-                                            await message.channel.trigger_typing()
-                                            await asyncio.sleep(0.5)
-                                            await message.channel.send(embed=embed)
+                                            try:
+                                                await message.channel.trigger_typing()
+                                                await asyncio.sleep(0.5)
+                                                await message.channel.send(embed=embed)
+                                            except:
+                                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                                if not message.author.bot:
+                                                    message.author.send(embed=embed)
                                         else:
                                             UserInGameName.uplay.update({message.author.id: UserName})
                                             newFileUplay = str(UserInGameName.uplay.copy())
@@ -1011,30 +1350,50 @@ async def on_message(message):
                                             embed=discord.Embed(title="", description=":white_check_mark: Erfolgreich gesetzt", color=0x2ecc71)
                                             embed.set_footer(text="Uplay: " + args[2], icon_url="https://pics.computerbase.de/7/7/5/8/3/logo-256.png")
                                             embed.timestamp=datetime.datetime.utcnow()
-                                            await message.channel.trigger_typing()
-                                            await asyncio.sleep(0.5)
-                                            await message.channel.send(embed=embed)
+                                            try:
+                                                await message.channel.trigger_typing()
+                                                await asyncio.sleep(0.5)
+                                                await message.channel.send(embed=embed)
+                                            except:
+                                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                                if not message.author.bot:
+                                                    message.author.send(embed=embed)
                                     except:
                                         embed=discord.Embed(title="", description="Es trat ein Fehler auf!\nBitte versuche es später erneut", color=0xff0000)
                                         embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                                         embed.timestamp=datetime.datetime.utcnow()
-                                        await message.channel.trigger_typing()
-                                        await asyncio.sleep(0.5)
-                                        await message.channel.send(embed=embed)
+                                        try:
+                                            await message.channel.trigger_typing()
+                                            await asyncio.sleep(0.5)
+                                            await message.channel.send(embed=embed)
+                                        except:
+                                            embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                            if not message.author.bot:
+                                                message.author.send(embed=embed)
                                 else:
                                     embed=discord.Embed(title="", description="Der Name darf keine Leerzeichen enthalten!", color=0xff0000)
                                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                                     embed.timestamp=datetime.datetime.utcnow()
-                                    await message.channel.trigger_typing()
-                                    await asyncio.sleep(0.5)
-                                    await message.channel.send(embed=embed)
+                                    try:
+                                        await message.channel.trigger_typing()
+                                        await asyncio.sleep(0.5)
+                                        await message.channel.send(embed=embed)
+                                    except:
+                                        embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                        if not message.author.bot:
+                                            message.author.send(embed=embed)
                             else:
                                 embed=discord.Embed(title="", description="Bitte benutze **&register uplay [Name]**", color=0xff0000)
                                 embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                                 embed.timestamp=datetime.datetime.utcnow()
-                                await message.channel.trigger_typing()
-                                await asyncio.sleep(0.5)
-                                await message.channel.send(embed=embed)
+                                try:
+                                    await message.channel.trigger_typing()
+                                    await asyncio.sleep(0.5)
+                                    await message.channel.send(embed=embed)
+                                except:
+                                    embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                    if not message.author.bot:
+                                        message.author.send(embed=embed)
                                 
                         elif args[1] == "steam":
                             if len(message.content) >= 16:
@@ -1063,9 +1422,14 @@ async def on_message(message):
                                             embed=discord.Embed(title="", description=":white_check_mark: Erfolgreich gesetzt", color=0x2ecc71)
                                             embed.set_footer(text="Steam: " + args[2], icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2000px-Steam_icon_logo.svg.png")
                                             embed.timestamp=datetime.datetime.utcnow()
-                                            await message.channel.trigger_typing()
-                                            await asyncio.sleep(0.5)
-                                            await message.channel.send(embed=embed)
+                                            try:
+                                                await message.channel.trigger_typing()
+                                                await asyncio.sleep(0.5)
+                                                await message.channel.send(embed=embed)
+                                            except:
+                                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                                if not message.author.bot:
+                                                    message.author.send(embed=embed)
                                         else:
                                             UserInGameName.steam.update({message.author.id: UserName})
                                             newFileUplay = str(UserInGameName.uplay.copy())
@@ -1086,30 +1450,50 @@ async def on_message(message):
                                             embed=discord.Embed(title="", description=":white_check_mark: Erfolgreich gesetzt", color=0x2ecc71)
                                             embed.set_footer(text="Steam: " + args[2], icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2000px-Steam_icon_logo.svg.png")
                                             embed.timestamp=datetime.datetime.utcnow()
-                                            await message.channel.trigger_typing()
-                                            await asyncio.sleep(0.5)
-                                            await message.channel.send(embed=embed)
+                                            try:
+                                                await message.channel.trigger_typing()
+                                                await asyncio.sleep(0.5)
+                                                await message.channel.send(embed=embed)
+                                            except:
+                                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                                if not message.author.bot:
+                                                    message.author.send(embed=embed)
                                     except:
                                         embed=discord.Embed(title="", description="Es trat ein Fehler auf!\nBitte versuche es später erneut", color=0xff0000)
                                         embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                                         embed.timestamp=datetime.datetime.utcnow()
-                                        await message.channel.trigger_typing()
-                                        await asyncio.sleep(0.5)
-                                        await message.channel.send(embed=embed)
+                                        try:
+                                            await message.channel.trigger_typing()
+                                            await asyncio.sleep(0.5)
+                                            await message.channel.send(embed=embed)
+                                        except:
+                                            embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                            if not message.author.bot:
+                                                message.author.send(embed=embed)
                                 else:
                                     embed=discord.Embed(title="", description="Der Name darf keine Leerzeichen enthalten!", color=0xff0000)
                                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                                     embed.timestamp=datetime.datetime.utcnow()
-                                    await message.channel.trigger_typing()
-                                    await asyncio.sleep(0.5)
-                                    await message.channel.send(embed=embed)
+                                    try:
+                                        await message.channel.trigger_typing()
+                                        await asyncio.sleep(0.5)
+                                        await message.channel.send(embed=embed)
+                                    except:
+                                        embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                        if not message.author.bot:
+                                            message.author.send(embed=embed)
                             else:
                                 embed=discord.Embed(title="", description="Bitte benutze **&register steam [Name]**", color=0xff0000)
                                 embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                                 embed.timestamp=datetime.datetime.utcnow()
-                                await message.channel.trigger_typing()
-                                await asyncio.sleep(0.5)
-                                await message.channel.send(embed=embed)
+                                try:
+                                    await message.channel.trigger_typing()
+                                    await asyncio.sleep(0.5)
+                                    await message.channel.send(embed=embed)
+                                except:
+                                    embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                    if not message.author.bot:
+                                        message.author.send(embed=embed)
                               
                         elif args[1] == "epicgames":
                             if len(message.content) >= 20:
@@ -1138,9 +1522,14 @@ async def on_message(message):
                                             embed=discord.Embed(title="", description=":white_check_mark: Erfolgreich gesetzt", color=0x2ecc71)
                                             embed.set_footer(text="Epic Games: " + args[2], icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Epic_Games_logo.svg/2000px-Epic_Games_logo.svg.png")
                                             embed.timestamp=datetime.datetime.utcnow()
-                                            await message.channel.trigger_typing()
-                                            await asyncio.sleep(0.5)
-                                            await message.channel.send(embed=embed)
+                                            try:
+                                                await message.channel.trigger_typing()
+                                                await asyncio.sleep(0.5)
+                                                await message.channel.send(embed=embed)
+                                            except:
+                                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                                if not message.author.bot:
+                                                    message.author.send(embed=embed)
                                         else:
                                             UserInGameName.epicgames.update({message.author.id: UserName})
                                             newFileUplay = str(UserInGameName.uplay.copy())
@@ -1161,50 +1550,80 @@ async def on_message(message):
                                             embed=discord.Embed(title="", description=":white_check_mark: Erfolgreich gesetzt", color=0x2ecc71)
                                             embed.set_footer(text="Epic Games: " + args[2], icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Epic_Games_logo.svg/2000px-Epic_Games_logo.svg.png")
                                             embed.timestamp=datetime.datetime.utcnow()
-                                            await message.channel.trigger_typing()
-                                            await asyncio.sleep(0.5)
-                                            await message.channel.send(embed=embed)
+                                            try:
+                                                await message.channel.trigger_typing()
+                                                await asyncio.sleep(0.5)
+                                                await message.channel.send(embed=embed)
+                                            except:
+                                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                                if not message.author.bot:
+                                                    message.author.send(embed=embed)
                                     except:
                                         embed=discord.Embed(title="", description="Es trat ein Fehler auf!\nBitte versuche es später erneut", color=0xff0000)
                                         embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                                         embed.timestamp=datetime.datetime.utcnow()
-                                        await message.channel.trigger_typing()
-                                        await asyncio.sleep(0.5)
-                                        await message.channel.send(embed=embed)
+                                        try:
+                                            await message.channel.trigger_typing()
+                                            await asyncio.sleep(0.5)
+                                            await message.channel.send(embed=embed)
+                                        except:
+                                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                                if not message.author.bot:
+                                                    message.author.send(embed=embed)
                                 else:
                                     embed=discord.Embed(title="", description="Der Name darf keine Leerzeichen enthalten!", color=0xff0000)
                                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                                     embed.timestamp=datetime.datetime.utcnow()
-                                    await message.channel.trigger_typing()
-                                    await asyncio.sleep(0.5)
-                                    await message.channel.send(embed=embed)
+                                    try:
+                                        await message.channel.trigger_typing()
+                                        await asyncio.sleep(0.5)
+                                        await message.channel.send(embed=embed)
+                                    except:
+                                        embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                        if not message.author.bot:
+                                            message.author.send(embed=embed)
                             else:
                                 embed=discord.Embed(title="", description="Bitte benutze **&register epicgames [Name]**", color=0xff0000)
                                 embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                                 embed.timestamp=datetime.datetime.utcnow()
-                                await message.channel.trigger_typing()
-                                await asyncio.sleep(0.5)
-                                await message.channel.send(embed=embed)
+                                try:
+                                    await message.channel.trigger_typing()
+                                    await asyncio.sleep(0.5)
+                                    await message.channel.send(embed=embed)
+                                except:
+                                    embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                    if not message.author.bot:
+                                        message.author.send(embed=embed)
                         
                         else:
                             embed=discord.Embed(title="", description="Bitte benutze **&register [uplay/steam/epicgames] [Name]**", color=0xff0000)
                             embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                             embed.timestamp=datetime.datetime.utcnow()
-                            await message.channel.trigger_typing()
-                            await asyncio.sleep(0.5)
-                            await message.channel.send(embed=embed)
+                            try:
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
+                                await message.channel.send(embed=embed)
+                            except:
+                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                if not message.author.bot:
+                                    message.author.send(embed=embed)
             
             #help
                 if message.content.startswith(CONFIG.PREFIX + "help"):
                     embed = discord.Embed(title="", color=0xe43d53, description="[Über CherryBot](https://cherrybot.gitbook.io/cherrybot/)\n"
                                           + "[Befehle](https://cherrybot.gitbook.io/cherrybot/befehle)\n[FAQ](https://cherrybot.gitbook.io/cherrybot/faq)\n[Lade CherryBot ein](https://discordapp.com/oauth2/authorize?client_id=664831660235292714&scope=bot&response_type=code&redirect_uri=https://discord.gg/ZMDJKUf&permissions=543818)\n"
-                                          + "[CherryBot auf GitHub](https://github.com/IBimsEinMystery/CherryBot)\n[Unterstütze mich](https://www.paypal.me/dominik1711)")
+                                          + "[CherryBot auf GitHub](https://github.com/IBimsEinMystery/CherryBot)\n[Unterstütze mich](https://www.paypal.me/dominik1711)\n[Vote für CherryBot](https://top.gg/bot/664831660235292714/vote)")
                     embed.set_author(name="CherryBot Hilfe Menü", icon_url=client.user.avatar_url)
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp=datetime.datetime.utcnow()
-                    await message.channel.trigger_typing()
-                    await asyncio.sleep(0.5)
-                    await message.channel.send(embed=embed)
+                    try:
+                        await message.channel.trigger_typing()
+                        await asyncio.sleep(0.5)
+                        await message.channel.send(embed=embed)
+                    except:
+                        embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                        if not message.author.bot:
+                            message.author.send(embed=embed)
                 
                             
             #RespondOnPing
@@ -1239,14 +1658,24 @@ async def on_message(message):
                         if message.content.startswith((CONFIG).PREFIX + "epicgames"):
                             return
                         if message.content.startswith("Hallo"):
-                            await message.channel.trigger_typing()
-                            await asyncio.sleep(0.5)
-                            await message.channel.send('Hallo ' + message.author.mention)
+                            try:
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
+                                await message.channel.send('Hallo ' + message.author.mention)
+                            except:
+                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                if not message.author.bot:
+                                    message.author.send(embed=embed)
                             return
-                        else:
-                            await message.channel.trigger_typing()
-                            await asyncio.sleep(0.5)
-                            await message.channel.send('Meine Prefix ist **' + CONFIG.PREFIX + '** ' + message.author.mention)
+                        if message.content.startswith(str(client.user.mention)):
+                            try:
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
+                                await message.channel.send('Meine Prefix ist **' + CONFIG.PREFIX + '** ' + message.author.mention)
+                            except:
+                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                if not message.author.bot:
+                                    message.author.send(embed=embed)
 
 
 client.run(CONFIG.TOKEN)
