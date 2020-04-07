@@ -4,6 +4,7 @@
 [![Python3](https://img.shields.io/badge/python-3.8-blue.svg)](https://github.com/IBimsEinMystery/CherryBot)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/IBimsEinMystery/CherryBot/master/LICENSE)
 [![Discord Server](https://img.shields.io/badge/Support-Discord%20Server-blue.svg)](https://discord.gg/ZMDJKUf)
+[![Discord Bots](https://top.gg/api/widget/status/664831660235292714.svg)](https://top.gg/bot/664831660235292714)
 
 Commands List
 -------------
