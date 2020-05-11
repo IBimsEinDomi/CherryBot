@@ -34,7 +34,7 @@ import codecs
 import os
 
 client = discord.Client()
-__version__ = '1.5'
+__version__ = '1.5 Beta'
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 THIS_FILE = os.path.join(THIS_FOLDER, 'MIT.txt')
 mit_license = codecs.open(THIS_FILE, "r", encoding="utf-8")
@@ -125,7 +125,6 @@ async def on_guild_remove(guild):
     embed.timestamp = datetime.datetime.utcnow()
     await client.AppInfo.owner.send(embed=embed)
     print(__printDateTime + "Vom Server entfernt")
-    print(guild.created_at.replace.astimezone(timezone('Europe/Berlin')))
 
 #on_disconnect
 @client.event
