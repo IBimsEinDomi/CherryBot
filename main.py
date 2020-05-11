@@ -503,7 +503,7 @@ async def on_message(message):
                         except:
                             embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                             if not message.author.bot:
-                                message.author.send(embed=embed)
+                                await message.author.send(embed=embed)
     
             #set-news
                 if message.content.startswith(CONFIG.PREFIX + 'set-news'):
@@ -620,7 +620,7 @@ async def on_message(message):
                         except:
                             embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                             if not message.author.bot:
-                                message.author.send(embed=embed)
+                                await message.author.send(embed=embed)
                         
             #bot-info
                 if message.content.startswith(CONFIG.PREFIX + "bot-info"):
@@ -640,7 +640,7 @@ async def on_message(message):
                     except:
                         embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                         if not message.author.bot:
-                            message.author.send(embed=embed)
+                            await message.author.send(embed=embed)
                     
             #sv-info
                 if message.content.startswith(CONFIG.PREFIX + "sv-info"):
@@ -675,7 +675,7 @@ async def on_message(message):
                     except:
                         embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                         if not message.author.bot:
-                            message.author.send(embed=embed)
+                            await message.author.send(embed=embed)
             
             #whois
                 if message.content.startswith(CONFIG.PREFIX + "whois"):
@@ -755,7 +755,7 @@ async def on_message(message):
                     except:
                         embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                         if not message.author.bot:
-                            message.author.send(embed=embed)
+                            await message.author.send(embed=embed)
             
             #ping
                 if message.content.startswith(CONFIG.PREFIX + "ping"):
@@ -768,7 +768,7 @@ async def on_message(message):
                     except:
                         embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                         if not message.author.bot:
-                            message.author.send(embed=embed)
+                            await message.author.send(embed=embed)
                     
             #invite
                 if message.content.startswith(CONFIG.PREFIX + "invite"):
@@ -785,7 +785,7 @@ async def on_message(message):
                     except:
                         embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                         if not message.author.bot:
-                            message.author.send(embed=embed)
+                            await message.author.send(embed=embed)
                         
             #src
                 if message.content.startswith(CONFIG.PREFIX + "src"):
@@ -800,7 +800,7 @@ async def on_message(message):
                     except:
                         embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                         if not message.author.bot:
-                            message.author.send(embed=embed)
+                            await message.author.send(embed=embed)
             
             #kick
                 if message.content.startswith(CONFIG.PREFIX + "kick"):
@@ -898,7 +898,7 @@ async def on_message(message):
                         except:
                             embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                             if not message.author.bot:
-                                message.author.send(embed=embed)
+                                await message.author.send(embed=embed)
                 
             #uplay
                 if(message.content.startswith(CONFIG.PREFIX + "uplay")):
@@ -944,7 +944,7 @@ async def on_message(message):
                                 except:
                                     embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                     if not message.author.bot:
-                                        message.author.send(embed=embed)
+                                        await message.author.send(embed=embed)
                             return
                         else:
                             embed=discord.Embed(title="", description="Du hast keine Verknüpfung für Uplay", color=0x0070FF)
@@ -958,7 +958,7 @@ async def on_message(message):
                             except:
                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                 if not message.author.bot:
-                                    message.author.send(embed=embed)
+                                    await message.author.send(embed=embed)
                             return
                     elif len(args) >= 2:
                         try:
@@ -972,7 +972,7 @@ async def on_message(message):
                             except:
                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                 if not message.author.bot:
-                                    message.author.send(embed=embed)
+                                    await message.author.send(embed=embed)
                             return
                     
                     if not client.user.id == member.id:
@@ -989,7 +989,7 @@ async def on_message(message):
                             except:
                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                 if not message.author.bot:
-                                    message.author.send(embed=embed)
+                                    await message.author.send(embed=embed)
                         elif not member.id in UserInGameName.uplay and len(args) >= 2:
                             embed=discord.Embed(title="", description=member.mention + " muss erst seinen\nAccount mit `" + CONFIG.PREFIX + "register uplay [Name]`\nverknüpfen", color=0x0070FF)
                             embed.set_footer(text="Uplay", icon_url="https://pics.computerbase.de/7/7/5/8/3/logo-256.png")
@@ -1002,7 +1002,7 @@ async def on_message(message):
                             except:
                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                 if not message.author.bot:
-                                    message.author.send(embed=embed)
+                                    await message.author.send(embed=embed)
                         else:
                             embed=discord.Embed(title="", description="Du musst erst deinen\nAccount mit `" + CONFIG.PREFIX + "register uplay [Name]`\nverknüpfen", color=0x0070FF)
                             embed.set_footer(text="Uplay", icon_url="https://pics.computerbase.de/7/7/5/8/3/logo-256.png")
@@ -1015,7 +1015,7 @@ async def on_message(message):
                             except:
                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                 if not message.author.bot:
-                                    message.author.send(embed=embed)
+                                    await message.author.send(embed=embed)
                     else:
                         embed=discord.Embed(title="", description="Mich gibt es nicht auf Uplay", color=0x0070FF)
                         embed.set_footer(text="Uplay", icon_url="https://pics.computerbase.de/7/7/5/8/3/logo-256.png")
@@ -1028,7 +1028,7 @@ async def on_message(message):
                         except:
                             embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                             if not message.author.bot:
-                                message.author.send(embed=embed)
+                                await message.author.send(embed=embed)
                       
             #steam        
                 if(message.content.startswith(CONFIG.PREFIX + "steam")):
@@ -1074,7 +1074,7 @@ async def on_message(message):
                                 except:
                                     embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                     if not message.author.bot:
-                                        message.author.send(embed=embed)
+                                        await message.author.send(embed=embed)
                             return
                         else:
                             embed=discord.Embed(title="", description="Du hast keine Verknüpfung für Steam", color=0x091936)
@@ -1088,7 +1088,7 @@ async def on_message(message):
                             except:
                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                 if not message.author.bot:
-                                    message.author.send(embed=embed)
+                                    await message.author.send(embed=embed)
                             return
                     elif len(args) >= 2:
                         try:
@@ -1102,7 +1102,7 @@ async def on_message(message):
                             except:
                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                 if not message.author.bot:
-                                    message.author.send(embed=embed)
+                                    await message.author.send(embed=embed)
                             return
                     
                     if not client.user.id == member.id:
@@ -1119,7 +1119,7 @@ async def on_message(message):
                             except:
                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                 if not message.author.bot:
-                                    message.author.send(embed=embed)
+                                   await message.author.send(embed=embed)
                         elif not member.id in UserInGameName.steam and len(args) >= 2:
                             embed=discord.Embed(title="", description=member.mention + " muss erst seinen\nAccount mit `" + CONFIG.PREFIX + "register steam [Name]`\nverknüpfen", color=0x091936)
                             embed.set_footer(text="Steam", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2000px-Steam_icon_logo.svg.png")
@@ -1132,7 +1132,7 @@ async def on_message(message):
                             except:
                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                 if not message.author.bot:
-                                    message.author.send(embed=embed)
+                                    await message.author.send(embed=embed)
                         else:
                             embed=discord.Embed(title="", description="Du musst erst deinen\nAccount mit `" + CONFIG.PREFIX + "register steam [Name]`\nverknüpfen", color=0x091936)
                             embed.set_footer(text="Steam", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2000px-Steam_icon_logo.svg.png")
@@ -1145,7 +1145,7 @@ async def on_message(message):
                             except:
                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                 if not message.author.bot:
-                                    message.author.send(embed=embed)
+                                    await message.author.send(embed=embed)
                     else:
                         embed=discord.Embed(title="", description="Mich gibt es nicht auf Steam", color=0x091936)
                         embed.set_footer(text="Steam", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2000px-Steam_icon_logo.svg.png")
@@ -1158,7 +1158,7 @@ async def on_message(message):
                         except:
                             embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                             if not message.author.bot:
-                                message.author.send(embed=embed)
+                                await message.author.send(embed=embed)
                     
             #epicgames
                 if(message.content.startswith(CONFIG.PREFIX + "epicgames")):
@@ -1192,7 +1192,7 @@ async def on_message(message):
                                 except:
                                     embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                     if not message.author.bot:
-                                        message.author.send(embed=embed)
+                                        await message.author.send(embed=embed)
                             except:
                                 embed=discord.Embed(title="", description="Es trat ein Fehler auf!\nBitte versuche es später erneut", color=0xff0000)
                                 embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
@@ -1204,7 +1204,7 @@ async def on_message(message):
                                 except:
                                     embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                     if not message.author.bot:
-                                        message.author.send(embed=embed)
+                                        await message.author.send(embed=embed)
                             return
                         else:
                             embed=discord.Embed(title="", description="Du hast keine Verknüpfung für Epic Games", color=0x2F2D2E)
@@ -1218,7 +1218,7 @@ async def on_message(message):
                             except:
                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                 if not message.author.bot:
-                                    message.author.send(embed=embed)
+                                    await message.author.send(embed=embed)
                             return
                     elif len(args) >= 2:
                         try:
@@ -1232,7 +1232,7 @@ async def on_message(message):
                             except:
                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                 if not message.author.bot:
-                                    message.author.send(embed=embed)
+                                    await message.author.send(embed=embed)
                             return
                     if not client.user.id == member.id:
                         if member.id in UserInGameName.epicgames:
@@ -1248,7 +1248,7 @@ async def on_message(message):
                             except:
                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                 if not message.author.bot:
-                                    message.author.send(embed=embed)
+                                    await message.author.send(embed=embed)
                         elif not member.id in UserInGameName.epicgames and len(args) >= 2:
                             embed=discord.Embed(title="", description=member.mention + " muss erst seinen\nAccount mit `" + CONFIG.PREFIX + "register epicgames [Name]`\nverknüpfen", color=0x2F2D2E)
                             embed.set_footer(text="Epic Games", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Epic_Games_logo.svg/2000px-Epic_Games_logo.svg.png")
@@ -1261,7 +1261,7 @@ async def on_message(message):
                             except:
                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                 if not message.author.bot:
-                                    message.author.send(embed=embed)
+                                    await message.author.send(embed=embed)
                         else:
                             embed=discord.Embed(title="", description="Du musst erst deinen\nAccount mit `" + CONFIG.PREFIX + "register epicgames [Name]`\nverknüpfen", color=0x2F2D2E)
                             embed.set_footer(text="Epic Games", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Epic_Games_logo.svg/2000px-Epic_Games_logo.svg.png")
@@ -1274,7 +1274,7 @@ async def on_message(message):
                             except:
                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                 if not message.author.bot:
-                                    message.author.send(embed=embed)
+                                    await message.author.send(embed=embed)
                     else:
                         embed=discord.Embed(title="", description="Mich gibt es nicht auf Epic Games", color=0x2F2D2E)
                         embed.set_footer(text="Epic Games", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Epic_Games_logo.svg/2000px-Epic_Games_logo.svg.png")
@@ -1287,7 +1287,7 @@ async def on_message(message):
                         except:
                             embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                             if not message.author.bot:
-                                message.author.send(embed=embed)
+                                await message.author.send(embed=embed)
                     
             #register
                 if(message.content.startswith(CONFIG.PREFIX + "register")):
@@ -1355,7 +1355,7 @@ async def on_message(message):
                                             except:
                                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                                 if not message.author.bot:
-                                                    message.author.send(embed=embed)
+                                                    await message.author.send(embed=embed)
                                     except:
                                         embed=discord.Embed(title="", description="Es trat ein Fehler auf!\nBitte versuche es später erneut", color=0xff0000)
                                         embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
@@ -1367,7 +1367,7 @@ async def on_message(message):
                                         except:
                                             embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                             if not message.author.bot:
-                                                message.author.send(embed=embed)
+                                                await message.author.send(embed=embed)
                                 else:
                                     embed=discord.Embed(title="", description="Der Name darf keine Leerzeichen enthalten!", color=0xff0000)
                                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
@@ -1379,7 +1379,7 @@ async def on_message(message):
                                     except:
                                         embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                         if not message.author.bot:
-                                            message.author.send(embed=embed)
+                                            await message.author.send(embed=embed)
                             else:
                                 embed=discord.Embed(title="", description="Bitte benutze **&register uplay [Name]**", color=0xff0000)
                                 embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
@@ -1391,7 +1391,7 @@ async def on_message(message):
                                 except:
                                     embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                     if not message.author.bot:
-                                        message.author.send(embed=embed)
+                                        await message.author.send(embed=embed)
                                 
                         elif args[1] == "steam":
                             if len(message.content) >= 16:
@@ -1427,7 +1427,7 @@ async def on_message(message):
                                             except:
                                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                                 if not message.author.bot:
-                                                    message.author.send(embed=embed)
+                                                    await message.author.send(embed=embed)
                                         else:
                                             UserInGameName.steam.update({message.author.id: UserName})
                                             newFileUplay = str(UserInGameName.uplay.copy())
@@ -1455,7 +1455,7 @@ async def on_message(message):
                                             except:
                                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                                 if not message.author.bot:
-                                                    message.author.send(embed=embed)
+                                                    await message.author.send(embed=embed)
                                     except:
                                         embed=discord.Embed(title="", description="Es trat ein Fehler auf!\nBitte versuche es später erneut", color=0xff0000)
                                         embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
@@ -1467,7 +1467,7 @@ async def on_message(message):
                                         except:
                                             embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                             if not message.author.bot:
-                                                message.author.send(embed=embed)
+                                                await message.author.send(embed=embed)
                                 else:
                                     embed=discord.Embed(title="", description="Der Name darf keine Leerzeichen enthalten!", color=0xff0000)
                                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
@@ -1479,7 +1479,7 @@ async def on_message(message):
                                     except:
                                         embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                         if not message.author.bot:
-                                            message.author.send(embed=embed)
+                                            await message.author.send(embed=embed)
                             else:
                                 embed=discord.Embed(title="", description="Bitte benutze **&register steam [Name]**", color=0xff0000)
                                 embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
@@ -1491,7 +1491,7 @@ async def on_message(message):
                                 except:
                                     embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                     if not message.author.bot:
-                                        message.author.send(embed=embed)
+                                        await message.author.send(embed=embed)
                               
                         elif args[1] == "epicgames":
                             if len(message.content) >= 20:
@@ -1527,7 +1527,7 @@ async def on_message(message):
                                             except:
                                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                                 if not message.author.bot:
-                                                    message.author.send(embed=embed)
+                                                    await message.author.send(embed=embed)
                                         else:
                                             UserInGameName.epicgames.update({message.author.id: UserName})
                                             newFileUplay = str(UserInGameName.uplay.copy())
@@ -1555,7 +1555,7 @@ async def on_message(message):
                                             except:
                                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                                 if not message.author.bot:
-                                                    message.author.send(embed=embed)
+                                                    await message.author.send(embed=embed)
                                     except:
                                         embed=discord.Embed(title="", description="Es trat ein Fehler auf!\nBitte versuche es später erneut", color=0xff0000)
                                         embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
@@ -1567,7 +1567,7 @@ async def on_message(message):
                                         except:
                                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                                 if not message.author.bot:
-                                                    message.author.send(embed=embed)
+                                                    await message.author.send(embed=embed)
                                 else:
                                     embed=discord.Embed(title="", description="Der Name darf keine Leerzeichen enthalten!", color=0xff0000)
                                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
@@ -1579,7 +1579,7 @@ async def on_message(message):
                                     except:
                                         embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                         if not message.author.bot:
-                                            message.author.send(embed=embed)
+                                            await message.author.send(embed=embed)
                             else:
                                 embed=discord.Embed(title="", description="Bitte benutze **&register epicgames [Name]**", color=0xff0000)
                                 embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
@@ -1591,7 +1591,7 @@ async def on_message(message):
                                 except:
                                     embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                     if not message.author.bot:
-                                        message.author.send(embed=embed)
+                                        await message.author.send(embed=embed)
                         
                         else:
                             embed=discord.Embed(title="", description="Bitte benutze **&register [uplay/steam/epicgames] [Name]**", color=0xff0000)
@@ -1604,7 +1604,7 @@ async def on_message(message):
                             except:
                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                 if not message.author.bot:
-                                    message.author.send(embed=embed)
+                                    await message.author.send(embed=embed)
             
             #help
                 if message.content.startswith(CONFIG.PREFIX + "help"):
@@ -1621,7 +1621,7 @@ async def on_message(message):
                     except:
                         embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                         if not message.author.bot:
-                            message.author.send(embed=embed)
+                            await message.author.send(embed=embed)
                 
                             
             #RespondOnPing
@@ -1663,7 +1663,7 @@ async def on_message(message):
                             except:
                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                 if not message.author.bot:
-                                    message.author.send(embed=embed)
+                                    await message.author.send(embed=embed)
                             return
                         else:
                             try:
@@ -1673,7 +1673,7 @@ async def on_message(message):
                             except:
                                 embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
                                 if not message.author.bot:
-                                    message.author.send(embed=embed)
+                                    await message.author.send(embed=embed)
 
 
 client.run(CONFIG.TOKEN)
