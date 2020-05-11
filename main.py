@@ -34,7 +34,7 @@ import codecs
 import os
 
 client = discord.Client()
-__version__ = '1.4'
+__version__ = '1.5'
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 THIS_FILE = os.path.join(THIS_FOLDER, 'MIT.txt')
 mit_license = codecs.open(THIS_FILE, "r", encoding="utf-8")
@@ -94,12 +94,12 @@ async def on_guild_join(guild):
     __printDateTime = str(DateTime)[11:13] + ":" + str(DateTime)[14:16] + ":" + str(DateTime)[17:19] + " " + str(DateTime)[8:10] + "." + str(DateTime)[5:7] + "." + str(DateTime.year) + " \xbb "
     embed = discord.Embed(title=':white_check_mark: Zum Server hinzugefügt', color=0x2ecc71,
     description="Server Name: " + str(guild.name) +"\nServer ID: " + str(guild.id) +
-    "\nServer Besitzer: " + str(guild.owner.mention) + "\nServer Region: " + str(guild.region))
+    "\nServer Besitzer: " + str(guild.owner) + "\nServer Region: " + str(guild.region))
     embed.add_field(name="Mitglieder", value=str(guild.member_count) + " Mitglieder")
-    CreateDateYear = str(guild.created_at)[0:4]
-    CreateDateMonth = str(guild.created_at)[5:7]
-    CreateDateDay = str(guild.created_at)[8:10]
-    CreateDateTime = str(guild.created_at)[11:16]
+    CreateDateYear = str(timezone('Europe/Berlin').fromutc(guild.created_at))[0:4]
+    CreateDateMonth = str(timezone('Europe/Berlin').fromutc(guild.created_at))[5:7]
+    CreateDateDay = str(timezone('Europe/Berlin').fromutc(guild.created_at))[8:10]
+    CreateDateTime = str(timezone('Europe/Berlin').fromutc(guild.created_at))[11:16]
     embed.add_field(name="Erstellt am", value=CreateDateDay + "." + CreateDateMonth + "." + CreateDateYear + " um " + CreateDateTime + " Uhr")
     embed.set_thumbnail(url=guild.icon_url)
     embed.timestamp = datetime.datetime.utcnow()
@@ -113,18 +113,19 @@ async def on_guild_remove(guild):
     __printDateTime = str(DateTime)[11:13] + ":" + str(DateTime)[14:16] + ":" + str(DateTime)[17:19] + " " + str(DateTime)[8:10] + "." + str(DateTime)[5:7] + "." + str(DateTime.year) + " \xbb "
     embed = discord.Embed(title=':x: Vom Server entfernt', color=0xe74c3c,
     description="Server Name: " + str(guild.name) + "\nServer ID: " + str(guild.id) +
-    "\nServer Besitzer: " + str(guild.owner.mention) + "\nServer Region: " + str(guild.region))
+    "\nServer Besitzer: " + str(guild.owner) + "\nServer Region: " + str(guild.region))
     embed.add_field(name="Mitglieder", value=str(guild.member_count) + " Mitglieder")
-    CreateDateYear = str(guild.created_at)[0:4]
-    CreateDateMonth = str(guild.created_at)[5:7]
-    CreateDateDay = str(guild.created_at)[8:10]
-    CreateDateTime = str(guild.created_at)[11:16]
+    CreateDateYear = str(timezone('Europe/Berlin').fromutc(guild.created_at))[0:4]
+    CreateDateMonth = str(timezone('Europe/Berlin').fromutc(guild.created_at))[5:7]
+    CreateDateDay = str(timezone('Europe/Berlin').fromutc(guild.created_at))[8:10]
+    CreateDateTime = str(timezone('Europe/Berlin').fromutc(guild.created_at))[11:16]
     embed.add_field(name="Erstellt am",
     value=CreateDateDay + "." + CreateDateMonth + "." + CreateDateYear + " um " + CreateDateTime + " Uhr")
     embed.set_thumbnail(url=guild.icon_url)
     embed.timestamp = datetime.datetime.utcnow()
     await client.AppInfo.owner.send(embed=embed)
     print(__printDateTime + "Vom Server entfernt")
+    print(guild.created_at.replace.astimezone(timezone('Europe/Berlin')))
 
 #on_disconnect
 @client.event
@@ -160,8 +161,8 @@ async def on_message(message):
             #sv-id
                 if message.content.startswith(CONFIG.PREFIX + "sv-id"):
                     args = message.content.split(" ")
-                    if args == 2:
-                        serverID = args[2]
+                    if len(args) == 2:
+                        serverID = args[1]
                         if str.isdigit(serverID):
                             if client.get_guild(int(serverID)):
                                 guildWithID = client.get_guild(int(serverID))
@@ -169,13 +170,13 @@ async def on_message(message):
                                 embed = discord.Embed(title=':white_check_mark: Server gefunden', color=0x2ecc71,
                                                  description="Server Name: " + str(guildWithID.name) +
                                                              "\nServer ID: " + str(guildWithID.id) +
-                                                             "\nServer Besitzer: " + str(guildWithID.owner.mention) +
+                                                             "\nServer Besitzer: " + str(guildWithID.owner) +
                                                              "\nServer Region: " + str(guildWithID.region))
                                 embed.add_field(name="Mitglieder", value=str(guildWithID.member_count) + " Mitglieder")
-                                CreateDateYear = str(guildWithID.created_at)[0:4]
-                                CreateDateMonth = str(guildWithID.created_at)[5:7]
-                                CreateDateDay = str(guildWithID.created_at)[8:10]
-                                CreateDateTime = str(guildWithID.created_at)[11:16]
+                                CreateDateYear = str(timezone('Europe/Berlin').fromutc(guildWithID.created_at))[0:4]
+                                CreateDateMonth = str(timezone('Europe/Berlin').fromutc(guildWithID.created_at))[5:7]
+                                CreateDateDay = str(timezone('Europe/Berlin').fromutc(guildWithID.created_at))[8:10]
+                                CreateDateTime = str(timezone('Europe/Berlin').fromutc(guildWithID.created_at))[11:16]
                                 embed.add_field(name="Erstellt am", value=CreateDateDay + "." + CreateDateMonth + "." + CreateDateYear + " um " + CreateDateTime + " Uhr")
                                 embed.set_thumbnail(url=guildWithID.icon_url)
                                 embed.timestamp = datetime.datetime.utcnow()
@@ -208,7 +209,6 @@ async def on_message(message):
                             dmEmbed = discord.Embed(title="", description="" + dmMessage, color=random.randint(0, 0xffffff))
                             dmEmbed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                             dmEmbed.timestamp=datetime.datetime.utcnow()
-                            dmEmbed.set_author(name=message.author.name, icon_url=message.author.avatar_url)
                             sendEmbed = discord.Embed(title="", description="Erfolgreich gesendet", color=0x2ecc71)
                             await message.channel.trigger_typing()
                             await asyncio.sleep(0.5)
@@ -628,8 +628,8 @@ async def on_message(message):
                     client.AppInfo = await client.application_info()
                     latency = str(client.latency)[0:4]
                     embed = discord.Embed(title="Bot Informationen", 
-                    description="Bot-Name: " + client.user.name + "\nBot-ID: " + str(client.user.id) + "\nDiscord-Version: " + str(discord.__version__) + 
-                    "\nBot-Version: " + str(__version__) + "\nPing: " + latency + "ms" + "\nPrefix: **&**" + "\nAktive Server: " + str(len(client.guilds)) + 
+                    description="Bot-Name: " + client.user.name + "\nBot-ID: " + str(client.user.id) + 
+                    "\nBot-Version: " + str(__version__) + "\nPing: " + latency + "ms" + "\nPrefix: **" + CONFIG.PREFIX + "**" + "\nAktive Server: " + str(len(client.guilds)) + 
                     " Server\nBot-Developer: " + str(client.AppInfo.owner.mention) + "\nBot-Sprache: :flag_de: German, Deutsch", color=0xe43d53)
                     embed.set_thumbnail(url=client.user.avatar_url)
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
@@ -654,17 +654,18 @@ async def on_message(message):
                     role_name = role_name[1:]
                     role_name.reverse()
                     role_list = ', '.join(role_name)
+                    role_amount = role_list.count("@")
                     client.AppInfo = await client.application_info()
                     embed = discord.Embed(title=str(message.guild.name),
                     description="Server Name: " + str(message.guild.name) + "\nServer ID: " + str(message.guild.id) +
                     "\nServerbesitzer: " + str(message.guild.owner.mention) + "\nServer Region: " + str(message.guild.region), color=0xffffff)
                     embed.add_field(name="Mitglieder", value=str(message.guild.member_count) + members)
-                    CreateDateYear = str(message.guild.created_at)[0:4]
-                    CreateDateMonth = str(message.guild.created_at)[5:7]
-                    CreateDateDay = str(message.guild.created_at)[8:10]
-                    CreateDateTime = str(message.guild.created_at)[11:16]
+                    CreateDateYear = str(timezone('Europe/Berlin').fromutc(message.guild.created_at))[0:4]
+                    CreateDateMonth = str(timezone('Europe/Berlin').fromutc(message.guild.created_at))[5:7]
+                    CreateDateDay = str(timezone('Europe/Berlin').fromutc(message.guild.created_at))[8:10]
+                    CreateDateTime = str(timezone('Europe/Berlin').fromutc(message.guild.created_at))[11:16]
                     embed.add_field(name="Erstellt am", value=CreateDateDay + "." + CreateDateMonth + "." + CreateDateYear + " um " + CreateDateTime + " Uhr")
-                    embed.add_field(name="Rollen", value=role_list, inline=False)
+                    embed.add_field(name="Rollen [" + str(role_amount) + "]", value=role_list, inline=False)
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.set_thumbnail(url=message.guild.icon_url)
                     embed.timestamp = datetime.datetime.utcnow()
@@ -694,11 +695,11 @@ async def on_message(message):
                     if member.joined_at is None:
                         __JoinPos__ = "Konnte das Beitrittsdatum nicht feststellen"
                         return
-                    __JoinPos__ = sum(m.joined_at < member.joined_at for m in message.guild.members if m.joined_at is not None)
+                    __JoinPos__ = sum(timezone('Europe/Berlin').fromutc(m.joined_at) < timezone('Europe/Berlin').fromutc(member.joined_at) for m in message.guild.members if m.joined_at is not None)
                     if __JoinPos__ == 0:
                         __JoinPos__ = "Besitzer"
-                    AuthorGuildJoinDate = str(member.joined_at)[8:10] + "." + str(member.joined_at)[5:7] + "." + str(member.joined_at)[0:4] + " um " + str(member.joined_at)[11:16] + " Uhr"
-                    AuthorRegisterDate = str(member.created_at)[8:10] + "." + str(member.created_at)[5:7] + "." + str(member.created_at)[0:4] + " um " + str(member.created_at)[11:16] + " Uhr"
+                    AuthorGuildJoinDate = str(timezone('Europe/Berlin').fromutc(member.joined_at))[8:10] + "." + str(timezone('Europe/Berlin').fromutc(member.joined_at))[5:7] + "." + str(timezone('Europe/Berlin').fromutc(member.joined_at))[0:4] + " um " + str(timezone('Europe/Berlin').fromutc(member.joined_at))[11:16] + " Uhr"
+                    AuthorRegisterDate = str(timezone('Europe/Berlin').fromutc(member.created_at))[8:10] + "." + str(timezone('Europe/Berlin').fromutc(member.created_at))[5:7] + "." + str(timezone('Europe/Berlin').fromutc(member.created_at))[0:4] + " um " + str(timezone('Europe/Berlin').fromutc(member.created_at))[11:16] + " Uhr"
                     role_name = [role.mention for role in member.roles]
                     role_name = role_name[1:]
                     role_name.reverse()
@@ -790,9 +791,7 @@ async def on_message(message):
             #src
                 if message.content.startswith(CONFIG.PREFIX + "src"):
                     embed = discord.Embed(title="", description="Hier findest du meinen Source Code:"
-                                                                "\nhttps://github.com/IBimsEinMystery/ServerMod"
-                                                                "\n\n**Dieser Source Code steht unter Lizenz:**"
-                                                                "\n```" + mit_license.read() + "```", color=0xe43d53)
+                                                                "\nhttps://github.com/IBimsEinDomi/CherryBot", color=0xe43d53)
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp = datetime.datetime.utcnow()
                     try:
@@ -1667,7 +1666,7 @@ async def on_message(message):
                                 if not message.author.bot:
                                     message.author.send(embed=embed)
                             return
-                        if message.content.startswith(str(client.user.mention)):
+                        else:
                             try:
                                 await message.channel.trigger_typing()
                                 await asyncio.sleep(0.5)
