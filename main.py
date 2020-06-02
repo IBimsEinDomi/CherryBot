@@ -34,7 +34,7 @@ import codecs
 import os, sys
 
 client = discord.Client()
-__version__ = '1.6'
+__version__ = '1.6.1'
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 THIS_FILE = os.path.join(THIS_FOLDER, 'MIT.txt')
 mit_license = codecs.open(THIS_FILE, "r", encoding="utf-8")
@@ -777,7 +777,7 @@ async def on_message(message):
                     embed = discord.Embed(title="Bot Informationen", 
                     description="Bot-Name: " + client.user.name + "\nBot-ID: " + str(client.user.id) + 
                     "\nBot-Version: " + str(__version__) + "\nPing: " + latency + "ms" + "\nPrefix: **" + CONFIG.PREFIX + "**" + "\nAktive Server: " + str(len(client.guilds)) + 
-                    " Server\nBot-Developer: " + str(client.AppInfo.owner) + "\nBot-Sprache: :flag_de: German, Deutsch", color=0xe43d53)
+                    " Server\nBot-Developer: " + str(client.AppInfo.owner) + "\nBot-Sprache: :flag_de: German, Deutsch", color=0xFF4642)
                     embed.set_thumbnail(url=client.user.avatar_url)
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp = datetime.datetime.utcnow()
@@ -854,7 +854,7 @@ async def on_message(message):
                     color = member.top_role.color
                     client.AppInfo = await client.application_info()
                     if member.id == client.user.id:
-                        color=0xe43d53
+                        color=0xFF4642
                     
                     __AllPerms = ""
                     if member.guild_permissions.administrator:
@@ -904,7 +904,7 @@ async def on_message(message):
             #ping
                 if message.content.startswith(CONFIG.PREFIX + "ping"):
                     latency = str(client.latency)[0:4]
-                    embed=discord.Embed(title="", description="Bot Ping = " + latency + "ms", color=0xe43d53)
+                    embed=discord.Embed(title="", description="Bot Ping = " + latency + "ms", color=0xFF4642)
                     try:
                         await message.channel.trigger_typing()
                         await asyncio.sleep(0.5)
@@ -916,12 +916,12 @@ async def on_message(message):
                     
             #invite
                 if message.content.startswith(CONFIG.PREFIX + "invite"):
-                    embed=discord.Embed(title="", description=message.author.mention + ", der Einladungslink wurde dir zugeschickt.", color=0xe43d53)
+                    embed=discord.Embed(title="", description=message.author.mention + ", der Einladungslink wurde dir zugeschickt.", color=0xFF4642)
                     try:
                         await message.channel.trigger_typing()
                         await asyncio.sleep(0.5)
                         await message.channel.send(embed=embed)
-                        embed = discord.Embed(title="", description="Hier kannst du mich zu deinem Server einladen:\nhttps://bit.ly/2wlXDC3", color=0xe43d53)
+                        embed = discord.Embed(title="", description="Hier kannst du mich zu deinem Server einladen:\nhttps://bit.ly/2wlXDC3", color=0xFF4642)
                         embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                         embed.timestamp = datetime.datetime.utcnow()
                         if not message.author.bot:
@@ -933,7 +933,7 @@ async def on_message(message):
             
             #vote
                 if message.content.startswith(CONFIG.PREFIX + "vote"):
-                    embed=discord.Embed(title="", description="[Vote für CherryBot](https://top.gg/bot/664831660235292714/vote)", color=0xe43d53)
+                    embed=discord.Embed(title="", description="[Vote für CherryBot](https://top.gg/bot/664831660235292714/vote)", color=0xFF4642)
                     try:
                         await message.channel.trigger_typing()
                         await asyncio.sleep(0.5)
@@ -947,7 +947,7 @@ async def on_message(message):
             #src
                 if message.content.startswith(CONFIG.PREFIX + "src"):
                     embed = discord.Embed(title="", description="Hier findest du meinen Source Code:"
-                                                                "\nhttps://github.com/IBimsEinDomi/CherryBot", color=0xe43d53)
+                                                                "\nhttps://github.com/IBimsEinDomi/CherryBot", color=0xFF4642)
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp = datetime.datetime.utcnow()
                     try:
@@ -1765,7 +1765,7 @@ async def on_message(message):
             
             #help
                 if message.content.startswith(CONFIG.PREFIX + "help"):
-                    embed = discord.Embed(title="", color=0xe43d53, description="[Über CherryBot](https://cherrybot.gitbook.io/cherrybot/)\n"
+                    embed = discord.Embed(title="", color=0xFF4642, description="[Über CherryBot](https://cherrybot.gitbook.io/cherrybot/)\n"
                                           + "[Befehle](https://cherrybot.gitbook.io/cherrybot/befehle)\n[FAQ](https://cherrybot.gitbook.io/cherrybot/faq)\n[Lade CherryBot ein](https://discordapp.com/oauth2/authorize?client_id=664831660235292714&scope=bot&response_type=code&redirect_uri=https://discord.gg/ZMDJKUf&permissions=543818)\n"
                                           + "[CherryBot auf GitHub](https://github.com/IBimsEinMystery/CherryBot)\n[Unterstütze mich](https://www.paypal.me/dominik1711)\n[Vote für CherryBot](https://top.gg/bot/664831660235292714/vote)")
                     embed.set_author(name="CherryBot Hilfe Menü", icon_url=client.user.avatar_url)
