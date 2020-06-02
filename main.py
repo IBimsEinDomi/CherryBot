@@ -34,7 +34,7 @@ import codecs
 import os, sys
 
 client = discord.Client()
-__version__ = '1.6.1'
+__version__ = '1.6.2'
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 THIS_FILE = os.path.join(THIS_FOLDER, 'MIT.txt')
 mit_license = codecs.open(THIS_FILE, "r", encoding="utf-8")
@@ -510,7 +510,7 @@ async def on_message(message):
                                                 await message.channel.send(embed=reboot)
                                                 print(__printDateTime + "Neustart")
                                                 client.rebootMessageID = "NOTHING"
-                                                await asyncio.sleep()
+                                                await asyncio.sleep(2)
                                                 await client.change_presence(status=discord.Status.offline)
                                                 os.system("sudo shutdown -r now")
                                                 sys.exit()
