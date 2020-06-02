@@ -1,3 +1,2 @@
-config/
-config/__pycache__/
-config/CONFIG.py
+config\
+config\__pycache__\
