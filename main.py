@@ -32,9 +32,10 @@ from config import CONFIG, SV_NEWS, UserInGameName
 from config.GAMES import __games__, __gamesTimer__
 import codecs
 import os, sys
+import subprocess
 
 client = discord.Client()
-__version__ = '1.6.2'
+__version__ = '1.7'
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 THIS_FILE = os.path.join(THIS_FOLDER, 'MIT.txt')
 mit_license = codecs.open(THIS_FILE, "r", encoding="utf-8")
@@ -115,7 +116,7 @@ async def on_guild_remove(guild):
     embed = discord.Embed(title=':x: Vom Server entfernt', color=0xe74c3c,
     description="Server Name: " + str(guild.name) + "\nServer ID: " + str(guild.id) +
     "\nServer Besitzer: " + str(guild.owner) + "\nServer Region: " + str(guild.region))
-    embed.add_field(name="Mitglieder", value=str(guild.member_count) + " Mitglieder")
+    embed.add_field(name="Mitglieder", value=str(guild.member_count -1) + " Mitglieder")
     CreateDateYear = str(timezone('Europe/Berlin').fromutc(guild.created_at))[0:4]
     CreateDateMonth = str(timezone('Europe/Berlin').fromutc(guild.created_at))[5:7]
     CreateDateDay = str(timezone('Europe/Berlin').fromutc(guild.created_at))[8:10]
@@ -327,6 +328,18 @@ async def on_message(message):
                                         rebootCancel = discord.Embed(title="", color=0xe74c3c, description="Neustart abgebrochen")
                                         await message.channel.send(embed=rebootCancel)
                                         client.rebootMessageID = "NOTHING"
+
+            #speedtest
+                if message.content.startswith(CONFIG.PREFIX + 'speedtest'):
+                    await message.channel.trigger_typing()
+                    embed = discord.Embed(title="", color=0x2ecc71, description="Speedtest wird durchgeführt <a:loading:721721196609011723>")
+                    msgEdit = await message.channel.send(embed=embed)
+                    result = discord.Embed(title="Internet Speedtest", color=0x2ecc71, description=os.popen('speedtest-cli --simple').read())
+                    result.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
+                    result.timestamp=datetime.datetime.utcnow()
+                    await msgEdit.edit(embed=result)
+
+
                                     
         #PrivateMessage
         else:
@@ -545,6 +558,16 @@ async def on_message(message):
                                 
         #BotAn
             if CONFIG.clientLogout == False:
+
+            #speedtest
+                if message.content.startswith(CONFIG.PREFIX + 'speedtest'):
+                    await message.channel.trigger_typing()
+                    embed = discord.Embed(title="", color=0x2ecc71, description="Speedtest wird durchgeführt <a:loading:721721196609011723>")
+                    msgEdit = await message.channel.send(embed=embed)
+                    result = discord.Embed(title="Internet Speedtest", color=0x2ecc71, description=os.popen('speedtest-cli --simple').read())
+                    result.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
+                    result.timestamp=datetime.datetime.utcnow()
+                    await msgEdit.edit(embed=result)
 
             #dm
                 if message.content.startswith(CONFIG.PREFIX + "dm"):
@@ -801,7 +824,7 @@ async def on_message(message):
                     embed = discord.Embed(title=str(message.guild.name),
                     description="Server Name: " + str(message.guild.name) + "\nServer ID: " + str(message.guild.id) +
                     "\nServerbesitzer: " + str(message.guild.owner.mention) + "\nServer Region: " + str(message.guild.region), color=0xffffff)
-                    embed.add_field(name="Mitglieder", value=str(message.guild.member_count) + "Mitglieder")
+                    embed.add_field(name="Mitglieder", value=str(message.guild.member_count) + " Mitglieder")
                     CreateDateYear = str(timezone('Europe/Berlin').fromutc(message.guild.created_at))[0:4]
                     CreateDateMonth = str(timezone('Europe/Berlin').fromutc(message.guild.created_at))[5:7]
                     CreateDateDay = str(timezone('Europe/Berlin').fromutc(message.guild.created_at))[8:10]
@@ -839,8 +862,6 @@ async def on_message(message):
                         __JoinPos__ = "Unbekannt"
                         return
                     __JoinPos__ = sum(timezone('Europe/Berlin').fromutc(m.joined_at) < timezone('Europe/Berlin').fromutc(member.joined_at) for m in message.guild.members if m.joined_at is not None)
-                    if __JoinPos__ == 0:
-                        __JoinPos__ = "Serverbesitzer"
                     AuthorGuildJoinDate = str(timezone('Europe/Berlin').fromutc(member.joined_at))[8:10] + "." + str(timezone('Europe/Berlin').fromutc(member.joined_at))[5:7] + "." + str(timezone('Europe/Berlin').fromutc(member.joined_at))[0:4] + " um " + str(timezone('Europe/Berlin').fromutc(member.joined_at))[11:16] + " Uhr"
                     AuthorRegisterDate = str(timezone('Europe/Berlin').fromutc(member.created_at))[8:10] + "." + str(timezone('Europe/Berlin').fromutc(member.created_at))[5:7] + "." + str(timezone('Europe/Berlin').fromutc(member.created_at))[0:4] + " um " + str(timezone('Europe/Berlin').fromutc(member.created_at))[11:16] + " Uhr"
                     role_name = [role.mention for role in member.roles]
@@ -881,6 +902,11 @@ async def on_message(message):
                         __AllPerms += "Nicknamen ändern"
                     if __AllPerms == "":
                         __AllPerms = "Keine Rechte auf dem Server"
+                    
+                    memberName = member
+                    if message.guild.owner == member:
+                        memberName = str(member) + " 👑"
+
                     embed = discord.Embed(title="", description="Name: " + str(member.mention) +
                                                                 "\nID: " + str(member.id) +
                                                                 "\nBeigetreten: " + str(AuthorGuildJoinDate) +
@@ -891,7 +917,7 @@ async def on_message(message):
                     embed.set_thumbnail(url=member.avatar_url)
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp = datetime.datetime.utcnow()
-                    embed.set_author(name=member, icon_url=member.avatar_url)
+                    embed.set_author(name=memberName, icon_url=member.avatar_url)
                     try:
                         await message.channel.trigger_typing()
                         await asyncio.sleep(0.5)
