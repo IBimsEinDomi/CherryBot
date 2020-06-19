@@ -353,6 +353,7 @@ async def on_message(message):
                     minutesUp = (timeUp / 60) % 60
                     secondsUp = timeUp % 60
                     await message.channel.trigger_typing()
+                    asyncio.sleep(0.5)
                     embed = discord.Embed(title="Online seit:", color=0x2ecc71, description="{0:.0f} Stunden, {1:.0f} Minuten und {2:.0f} Sekunden".format(hoursUp, minutesUp, secondsUp))
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp=datetime.datetime.utcnow()
@@ -585,6 +586,7 @@ async def on_message(message):
                     minutesUp = (timeUp / 60) % 60
                     secondsUp = timeUp % 60
                     await message.channel.trigger_typing()
+                    asyncio.sleep(0.5)
                     embed = discord.Embed(title="Online seit:", color=0x2ecc71, description="{0:.0f} Stunden, {1:.0f} Minuten und {2:.0f} Sekunden".format(hoursUp, minutesUp, secondsUp))
                     embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                     embed.timestamp=datetime.datetime.utcnow()
