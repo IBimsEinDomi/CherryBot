@@ -35,7 +35,7 @@ import os, sys
 import subprocess, shlex
 
 client = discord.Client()
-__version__ = '1.7.1'
+__version__ = '1.7.2'
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 THIS_FILE = os.path.join(THIS_FOLDER, 'MIT.txt')
 mit_license = codecs.open(THIS_FILE, "r", encoding="utf-8")
@@ -665,8 +665,9 @@ async def on_message(message):
             #sv-news
                 if message.content.startswith(CONFIG.PREFIX + 'sv-news'):
                     if message.guild.id in SV_NEWS.newsID:
-                        patchChannelID = SV_NEWS.newsID.get(message.guild.id)[0:18]
-                        patchMessageID = SV_NEWS.newsID.get(message.guild.id)[19:37]
+                        division = SV_NEWS.newsID.get(message.guild.id).find("+")
+                        patchChannelID = SV_NEWS.newsID.get(message.guild.id)[:division]
+                        patchMessageID = SV_NEWS.newsID.get(message.guild.id)[division+1:]
                         try:
                             patchChannel = message.guild.get_channel(int(patchChannelID))
                             try:
@@ -718,9 +719,10 @@ async def on_message(message):
             #set-news
                 if message.content.startswith(CONFIG.PREFIX + 'set-news'):
                     if message.author.guild_permissions.manage_guild:
-                        if len(message.content) == 47:
-                            channelID = message.content[10:28]
-                            messageID = message.content[29:47]
+                        args = message.content.split(" ")
+                        if len(args) == 3:
+                            channelID = args[1]
+                            messageID = args[2]
                             if str.isdigit(channelID) & str.isdigit(messageID):
                                 if message.guild.get_channel(int(channelID)):
                                     try:
@@ -731,12 +733,13 @@ async def on_message(message):
                                                 try:
                                                     embed = discord.Embed(title="", description=":white_check_mark: Erfolgreich gesetzt", color=0x2ecc71)
                                                     SV_NEWS.newsID.pop(message.guild.id)
-                                                    SV_NEWS.newsID.update({message.guild.id: str(channelID) + "(" + str(messageID) + ")"})
+                                                    SV_NEWS.newsID.update({message.guild.id: str(channelID) + "+" + str(messageID)})
                                                     __newDictionary = SV_NEWS.newsID.copy()
                                                     __newDictionary = str(__newDictionary).replace("{", "{\n ")
                                                     __newDictionary = str(__newDictionary).replace(",", ",\n")
                                                     __newDictionary = str(__newDictionary).replace("}", "\n}")
                                                     sv_news.write("newsID = " + str(__newDictionary))
+                                                    sv_news.close()
                                                     try:
                                                         await message.channel.trigger_typing()
                                                         await asyncio.sleep(0.5)
@@ -747,12 +750,13 @@ async def on_message(message):
                                                             await message.author.send(embed=embed)
                                                 except:
                                                     embed = discord.Embed(title="", description=":white_check_mark: Erfolgreich gesetzt", color=0x2ecc71)
-                                                    SV_NEWS.newsID.update({message.guild.id: str(channelID) + "(" + str(messageID) + ")"})
+                                                    SV_NEWS.newsID.update({message.guild.id: str(channelID) + "+" + str(messageID)})
                                                     __newDictionary = SV_NEWS.newsID.copy()
                                                     __newDictionary = str(__newDictionary).replace("{", "{\n ")
                                                     __newDictionary = str(__newDictionary).replace(",", ",\n")
                                                     __newDictionary = str(__newDictionary).replace("}", "\n}")
                                                     sv_news.write("newsID = " + str(__newDictionary))
+                                                    sv_news.close()
                                                     try:
                                                         await message.channel.trigger_typing()
                                                         await asyncio.sleep(0.5)
@@ -1136,7 +1140,7 @@ async def on_message(message):
                         member = message.author
                         if member.id in UserInGameName.uplay:
                             try:
-                                uplay = codecs.open(".\\config\\UserInGameName.py", "w")
+                                uplay = codecs.open(".\\config\\UserInGameName.py", "w", "utf-8")
                                 UserInGameName.uplay.pop(message.author.id)
                                 newFileUplay = str(UserInGameName.uplay.copy())
                                 newFileUplay = newFileUplay.replace("{", "{\n ")
@@ -1153,6 +1157,7 @@ async def on_message(message):
                                 uplay.write("uplay = " + newFileUplay)
                                 uplay.write("\nsteam = " + newFileSteam)
                                 uplay.write("\nepicgames = " + newFileEpic)
+                                uplay.close()
                                 embed = discord.Embed(title="", description="Die Verknüpfung wurde gelöscht", color=0x2ecc71)
                                 try:
                                     await message.channel.send(embed=embed)
@@ -1204,7 +1209,7 @@ async def on_message(message):
                     
                     if not client.user.id == member.id:
                         if member.id in UserInGameName.uplay:
-                            UserName = UserInGameName.uplay.get(member.id).replace("|Oe|", "Ö").replace("|oe|", "ö").replace("|Ue|", "Ü").replace("|ue|", "ü").replace("|Ae|", "Ä").replace("|ae|", "ä")
+                            UserName = UserInGameName.uplay.get(member.id)
                             embed=discord.Embed(title="", description="Name: " + UserName, color=0x0070FF)
                             embed.set_footer(text="Uplay", icon_url="https://pics.computerbase.de/7/7/5/8/3/logo-256.png")
                             embed.timestamp=datetime.datetime.utcnow()
@@ -1264,9 +1269,9 @@ async def on_message(message):
                             member = message.author
                     elif len(args) == 2 and str(args[1]) == "unlink":
                         member = message.author
-                        if member.id in UserInGameName.uplay:
+                        if member.id in UserInGameName.steam:
                             try:
-                                steam = codecs.open(".\\config\\UserInGameName.py", "w")
+                                steam = codecs.open(".\\config\\UserInGameName.py", "w", "utf-8")
                                 UserInGameName.steam.pop(message.author.id)
                                 newFileUplay = str(UserInGameName.uplay.copy())
                                 newFileUplay = newFileUplay.replace("{", "{\n ")
@@ -1283,6 +1288,7 @@ async def on_message(message):
                                 steam.write("uplay = " + newFileUplay)
                                 steam.write("\nsteam = " + newFileSteam)
                                 steam.write("\nepicgames = " + newFileEpic)
+                                steam.close()
                                 embed = discord.Embed(title="", description="Die Verknüpfung wurde gelöscht", color=0x2ecc71)
                                 try:
                                     await message.channel.send(embed=embed)
@@ -1334,7 +1340,7 @@ async def on_message(message):
                     
                     if not client.user.id == member.id:
                         if member.id in UserInGameName.steam:
-                            UserName = UserInGameName.steam.get(member.id).replace("|Oe|", "Ö").replace("|oe|", "ö").replace("|Ue|", "Ü").replace("|ue|", "ü").replace("|Ae|", "Ä").replace("|ae|", "ä")
+                            UserName = UserInGameName.steam.get(member.id)
                             embed=discord.Embed(title="", description="Name: " + UserName, color=0x091936)
                             embed.set_footer(text="Steam", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2000px-Steam_icon_logo.svg.png")
                             embed.timestamp=datetime.datetime.utcnow()
@@ -1394,10 +1400,10 @@ async def on_message(message):
                             member = message.author
                     elif len(args) == 2 and str(args[1]) == "unlink":
                         member = message.author
-                        if member.id in UserInGameName.uplay:
+                        if member.id in UserInGameName.epicgames:
                             try:
-                                epic = codecs.open(".\\config\\UserInGameName.py", "w")
-                                UserInGameName.steam.pop(message.author.id)
+                                epic = codecs.open(".\\config\\UserInGameName.py", "w", "utf-8")
+                                UserInGameName.epicgames.pop(message.author.id)
                                 newFileUplay = str(UserInGameName.uplay.copy())
                                 newFileUplay = newFileUplay.replace("{", "{\n ")
                                 newFileUplay = newFileUplay.replace(",", ",\n")
@@ -1413,6 +1419,7 @@ async def on_message(message):
                                 epic.write("uplay = " + newFileUplay)
                                 epic.write("\nsteam = " + newFileSteam)
                                 epic.write("\nepicgames = " + newFileEpic)
+                                epic.close()
                                 embed = discord.Embed(title="", description="Die Verknüpfung wurde gelöscht", color=0x2ecc71)
                                 try:
                                     await message.channel.send(embed=embed)
@@ -1463,7 +1470,7 @@ async def on_message(message):
                             return
                     if not client.user.id == member.id:
                         if member.id in UserInGameName.epicgames:
-                            UserName = UserInGameName.epicgames.get(member.id).replace("|Oe|", "Ö").replace("|oe|", "ö").replace("|Ue|", "Ü").replace("|ue|", "ü").replace("|Ae|", "Ä").replace("|ae|", "ä")
+                            UserName = UserInGameName.epicgames.get(member.id)
                             embed=discord.Embed(title="", description="Name: " + UserName, color=0x2F2D2E)
                             embed.set_footer(text="Epic Games", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Epic_Games_logo.svg/2000px-Epic_Games_logo.svg.png")
                             embed.timestamp=datetime.datetime.utcnow()
@@ -1522,10 +1529,10 @@ async def on_message(message):
                         args = message.content.split(" ")
                         if args[1] == "uplay":
                             if len(message.content) >= 16:
-                                UserName = str(args[2]).replace("Ö", "|Oe|").replace("ö", "|oe|").replace("Ü", "|Ue|").replace("ü", "|ue|").replace("Ä", "|Ae|").replace("ä", "|ae|")
+                                UserName = str(args[2])
                                 if len(message.content) <= 16 + len(args[2]):
                                     try:
-                                        uplay = codecs.open(".\\config\\UserInGameName.py", "w")
+                                        uplay = codecs.open(".\\config\\UserInGameName.py", "w", "utf-8")
                                         if message.author.id in UserInGameName.uplay:
                                             UserInGameName.uplay.pop(message.author.id)
                                             UserInGameName.uplay.update({message.author.id: UserName})
@@ -1544,6 +1551,7 @@ async def on_message(message):
                                             uplay.write("uplay = " + newFileUplay)
                                             uplay.write("\nsteam = " + newFileSteam)
                                             uplay.write("\nepicgames = " + newFileEpic)
+                                            uplay.close()
                                             embed=discord.Embed(title="", description=":white_check_mark: Erfolgreich gesetzt", color=0x2ecc71)
                                             embed.set_footer(text="Uplay: " + args[2], icon_url="https://pics.computerbase.de/7/7/5/8/3/logo-256.png")
                                             embed.timestamp=datetime.datetime.utcnow()
@@ -1572,6 +1580,7 @@ async def on_message(message):
                                             uplay.write("uplay = " + newFileUplay)
                                             uplay.write("\nsteam = " + newFileSteam)
                                             uplay.write("\nepicgames = " + newFileEpic)
+                                            uplay.close()
                                             embed=discord.Embed(title="", description=":white_check_mark: Erfolgreich gesetzt", color=0x2ecc71)
                                             embed.set_footer(text="Uplay: " + args[2], icon_url="https://pics.computerbase.de/7/7/5/8/3/logo-256.png")
                                             embed.timestamp=datetime.datetime.utcnow()
@@ -1622,10 +1631,10 @@ async def on_message(message):
                                 
                         elif args[1] == "steam":
                             if len(message.content) >= 16:
-                                UserName = str(args[2]).replace("Ö", "|Oe|").replace("ö", "|oe|").replace("Ü", "|Ue|").replace("ü", "|ue|").replace("Ä", "|Ae|").replace("ä", "|ae|")
+                                UserName = str(args[2])
                                 if len(message.content) <= 16 + len(args[2]):
                                     try:
-                                        steam = codecs.open(".\\config\\UserInGameName.py", "w")
+                                        steam = codecs.open(".\\config\\UserInGameName.py", "w", "utf-8")
                                         if message.author.id in UserInGameName.steam:
                                             UserInGameName.steam.pop(message.author.id)
                                             UserInGameName.steam.update({message.author.id: UserName})
@@ -1644,6 +1653,7 @@ async def on_message(message):
                                             steam.write("uplay = " + newFileUplay)
                                             steam.write("\nsteam = " + newFileSteam)
                                             steam.write("\nepicgames = " + newFileEpic)
+                                            steam.close()
                                             embed=discord.Embed(title="", description=":white_check_mark: Erfolgreich gesetzt", color=0x2ecc71)
                                             embed.set_footer(text="Steam: " + args[2], icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2000px-Steam_icon_logo.svg.png")
                                             embed.timestamp=datetime.datetime.utcnow()
@@ -1672,6 +1682,7 @@ async def on_message(message):
                                             steam.write("uplay = " + newFileUplay)
                                             steam.write("\nsteam = " + newFileSteam)
                                             steam.write("\nepicgames = " + newFileEpic)
+                                            steam.close()
                                             embed=discord.Embed(title="", description=":white_check_mark: Erfolgreich gesetzt", color=0x2ecc71)
                                             embed.set_footer(text="Steam: " + args[2], icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2000px-Steam_icon_logo.svg.png")
                                             embed.timestamp=datetime.datetime.utcnow()
@@ -1722,11 +1733,11 @@ async def on_message(message):
                               
                         elif args[1] == "epicgames":
                             if len(message.content) >= 20:
-                                UserName = str(args[2]).replace("Ö", "|Oe|").replace("ö", "|oe|").replace("Ü", "|Ue|").replace("ü", "|ue|").replace("Ä", "|Ae|").replace("ä", "|ae|")
+                                UserName = str(args[2])
                                 if len(message.content) <= 20 + len(args[2]):
                                     try:
-                                        epic = codecs.open(".\\config\\UserInGameName.py", "w")
-                                        if message.author.id in UserInGameName.uplay:
+                                        epic = codecs.open(".\\config\\UserInGameName.py", "w", "utf-8")
+                                        if message.author.id in UserInGameName.epicgames:
                                             UserInGameName.epicgames.pop(message.author.id)
                                             UserInGameName.epicgames.update({message.author.id: UserName})
                                             newFileUplay = str(UserInGameName.uplay.copy())
@@ -1744,6 +1755,7 @@ async def on_message(message):
                                             epic.write("uplay = " + newFileUplay)
                                             epic.write("\nsteam = " + newFileSteam)
                                             epic.write("\nepicgames = " + newFileEpic)
+                                            epic.close()
                                             embed=discord.Embed(title="", description=":white_check_mark: Erfolgreich gesetzt", color=0x2ecc71)
                                             embed.set_footer(text="Epic Games: " + args[2], icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Epic_Games_logo.svg/2000px-Epic_Games_logo.svg.png")
                                             embed.timestamp=datetime.datetime.utcnow()
@@ -1772,6 +1784,7 @@ async def on_message(message):
                                             epic.write("uplay = " + newFileUplay)
                                             epic.write("\nsteam = " + newFileSteam)
                                             epic.write("\nepicgames = " + newFileEpic)
+                                            epic.close()
                                             embed=discord.Embed(title="", description=":white_check_mark: Erfolgreich gesetzt", color=0x2ecc71)
                                             embed.set_footer(text="Epic Games: " + args[2], icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Epic_Games_logo.svg/2000px-Epic_Games_logo.svg.png")
                                             embed.timestamp=datetime.datetime.utcnow()
@@ -1821,7 +1834,20 @@ async def on_message(message):
                                         await message.author.send(embed=embed)
                         
                         else:
-                            embed=discord.Embed(title="", description="Bitte benutze **&register [uplay/steam/epicgames] [Name]**", color=0xff0000)
+                            embed=discord.Embed(title="", description="Bitte benutze **" + CONFIG.PREFIX + "register [uplay/steam/epicgames] [Name]**", color=0xff0000)
+                            embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
+                            embed.timestamp=datetime.datetime.utcnow()
+                            try:
+                                await message.channel.trigger_typing()
+                                await asyncio.sleep(0.5)
+                                await message.channel.send(embed=embed)
+                            except:
+                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                if not message.author.bot:
+                                    await message.author.send(embed=embed)
+
+                    else:
+                            embed=discord.Embed(title="", description="Bitte benutze **" + CONFIG.PREFIX + "register [uplay/steam/epicgames] [Name]**", color=0xff0000)
                             embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
                             embed.timestamp=datetime.datetime.utcnow()
                             try:
@@ -1893,14 +1919,20 @@ async def on_message(message):
                                     await message.author.send(embed=embed)
                             return
                         else:
-                            try:
-                                await message.channel.trigger_typing()
-                                await asyncio.sleep(0.5)
-                                await message.channel.send('Meine Prefix ist **' + CONFIG.PREFIX + '** ' + message.author.mention)
-                            except:
-                                embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
-                                if not message.author.bot:
-                                    await message.author.send(embed=embed)
+                            args = message.content.split(" ")
+                            if len(args) == 1 and args[0] == "<@!" + str(client.user.id) + ">":
+                                try:
+                                    await message.channel.trigger_typing()
+                                    await asyncio.sleep(0.5)
+                                    await message.channel.send('Meine Prefix ist **' + CONFIG.PREFIX + '** ' + message.author.mention)
+                                except:
+                                    embed = discord.Embed(title="", description="Ich habe keine Rechte um Nachrichten zu senden. Bitte gebe einen Administrator über dieses Problem bescheid.", color=0xff0000)
+                                    if not message.author.bot:
+                                        await message.author.send(embed=embed)
+                            else:
+                                return
+                    else:
+                        return
 
 
 client.run(CONFIG.TOKEN)
