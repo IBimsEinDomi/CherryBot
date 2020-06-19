@@ -23,7 +23,7 @@ SOFTWARE.
 """
 
 import discord
-import datetime
+import datetime, time
 from pytz import timezone
 import traceback
 import random
@@ -35,12 +35,13 @@ import os, sys
 import subprocess, shlex
 
 client = discord.Client()
-__version__ = '1.7'
+__version__ = '1.7.1'
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 THIS_FILE = os.path.join(THIS_FOLDER, 'MIT.txt')
 mit_license = codecs.open(THIS_FILE, "r", encoding="utf-8")
 client.logoutMessageID = "NOTHING"
 client.rebootMessageID = "NOTHING"
+client.startTime = time.time()
 
 #on_ready
 @client.event
@@ -345,6 +346,16 @@ async def on_message(message):
                         error = discord.Embed(title="", color=0xff0000, description="Es trat ein Fehler auf")
                         await msgEdit.edit(embed=error)
 
+            #uptime
+                if message.content.startswith(CONFIG.PREFIX + 'uptime'):
+                    timeUp = time.time() - client.startTime
+                    hoursUp = timeUp / 3600
+                    minutesUp = (timeUp / 60) % 60
+                    secondsUp = timeUp % 60
+                    await message.channel.trigger_typing()
+                    embed = discord.Embed(title="Online seit:", color=0x2ecc71, description="{0:.0f} Stunden, {1:.0f} Minuten und {2:.0f} Sekunden".format(hoursUp, minutesUp, secondsUp))
+                    await message.channel.send(embed=embed)
+
 
                                     
         #PrivateMessage
@@ -564,6 +575,16 @@ async def on_message(message):
                                 
         #BotAn
             if CONFIG.clientLogout == False:
+
+            #uptime
+                if message.content.startswith(CONFIG.PREFIX + 'uptime'):
+                    timeUp = time.time() - client.startTime
+                    hoursUp = timeUp / 3600
+                    minutesUp = (timeUp / 60) % 60
+                    secondsUp = timeUp % 60
+                    await message.channel.trigger_typing()
+                    embed = discord.Embed(title="Online seit:", color=0x2ecc71, description="{0:.0f} Stunden, {1:.0f} Minuten und {2:.0f} Sekunden".format(hoursUp, minutesUp, secondsUp))
+                    await message.channel.send(embed=embed)
 
             #speedtest
                 if message.content.startswith(CONFIG.PREFIX + 'speedtest'):
@@ -921,6 +942,8 @@ async def on_message(message):
                     if member.id == client.user.id:
                         color=0xFF4642
                         memberName = str(member) + " 🍒"
+                    if memberName.id == client.AppInfo.owner.id:
+                        memberName = str(member) + " 🔧"
 
                     embed = discord.Embed(title="", description="Name: " + str(member.mention) +
                                                                 "\nID: " + str(member.id) +
