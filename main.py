@@ -23,7 +23,7 @@ SOFTWARE.
 """
 
 import discord
-import datetime
+import datetime, time
 from pytz import timezone
 import traceback
 import random
@@ -32,15 +32,16 @@ from config import CONFIG, SV_NEWS, UserInGameName
 from config.GAMES import __games__, __gamesTimer__
 import codecs
 import os, sys
-import subprocess
+import subprocess, shlex
 
 client = discord.Client()
-__version__ = '1.7'
+__version__ = '1.7.1'
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 THIS_FILE = os.path.join(THIS_FOLDER, 'MIT.txt')
 mit_license = codecs.open(THIS_FILE, "r", encoding="utf-8")
 client.logoutMessageID = "NOTHING"
 client.rebootMessageID = "NOTHING"
+client.startTime = time.time()
 
 #on_ready
 @client.event
@@ -334,10 +335,29 @@ async def on_message(message):
                     await message.channel.trigger_typing()
                     embed = discord.Embed(title="", color=0x2ecc71, description="Speedtest wird durchgeführt <a:loading:721721196609011723>")
                     msgEdit = await message.channel.send(embed=embed)
-                    result = discord.Embed(title="Internet Speedtest", color=0x2ecc71, description=os.popen('speedtest-cli --simple').read())
-                    result.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
-                    result.timestamp=datetime.datetime.utcnow()
-                    await msgEdit.edit(embed=result)
+                    try:
+                        process = await asyncio.create_subprocess_exec("speedtest-cli", "--simple", stdout=asyncio.subprocess.PIPE)
+                        output = await process.communicate()
+                        result = discord.Embed(title="Internet Speedtest", color=0x2ecc71, description=output[0].decode("utf-8"))
+                        result.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
+                        result.timestamp=datetime.datetime.utcnow()
+                        await msgEdit.edit(embed=result)
+                    except:
+                        error = discord.Embed(title="", color=0xff0000, description="Es trat ein Fehler auf")
+                        await msgEdit.edit(embed=error)
+
+            #uptime
+                if message.content.startswith(CONFIG.PREFIX + 'uptime'):
+                    timeUp = time.time() - client.startTime
+                    hoursUp = timeUp / 3600
+                    minutesUp = (timeUp / 60) % 60
+                    secondsUp = timeUp % 60
+                    await message.channel.trigger_typing()
+                    asyncio.sleep(0.5)
+                    embed = discord.Embed(title="Online seit:", color=0x2ecc71, description="{0:.0f} Stunden, {1:.0f} Minuten und {2:.0f} Sekunden".format(hoursUp, minutesUp, secondsUp))
+                    embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
+                    embed.timestamp=datetime.datetime.utcnow()
+                    await message.channel.send(embed=embed)
 
 
                                     
@@ -559,15 +579,34 @@ async def on_message(message):
         #BotAn
             if CONFIG.clientLogout == False:
 
+            #uptime
+                if message.content.startswith(CONFIG.PREFIX + 'uptime'):
+                    timeUp = time.time() - client.startTime
+                    hoursUp = timeUp / 3600
+                    minutesUp = (timeUp / 60) % 60
+                    secondsUp = timeUp % 60
+                    await message.channel.trigger_typing()
+                    asyncio.sleep(0.5)
+                    embed = discord.Embed(title="Online seit:", color=0x2ecc71, description="{0:.0f} Stunden, {1:.0f} Minuten und {2:.0f} Sekunden".format(hoursUp, minutesUp, secondsUp))
+                    embed.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
+                    embed.timestamp=datetime.datetime.utcnow()
+                    await message.channel.send(embed=embed)
+
             #speedtest
                 if message.content.startswith(CONFIG.PREFIX + 'speedtest'):
                     await message.channel.trigger_typing()
                     embed = discord.Embed(title="", color=0x2ecc71, description="Speedtest wird durchgeführt <a:loading:721721196609011723>")
                     msgEdit = await message.channel.send(embed=embed)
-                    result = discord.Embed(title="Internet Speedtest", color=0x2ecc71, description=os.popen('speedtest-cli --simple').read())
-                    result.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
-                    result.timestamp=datetime.datetime.utcnow()
-                    await msgEdit.edit(embed=result)
+                    try:
+                        process = await asyncio.create_subprocess_exec("speedtest-cli", "--simple", stdout=asyncio.subprocess.PIPE)
+                        output = await process.communicate()
+                        result = discord.Embed(title="Internet Speedtest", color=0x2ecc71, description=output[0].decode("utf-8"))
+                        result.set_footer(text=client.user.name, icon_url=client.user.avatar_url)
+                        result.timestamp=datetime.datetime.utcnow()
+                        await msgEdit.edit(embed=result)
+                    except:
+                        error = discord.Embed(title="", color=0xff0000, description="Es trat ein Fehler auf")
+                        await msgEdit.edit(embed=error)
 
             #dm
                 if message.content.startswith(CONFIG.PREFIX + "dm"):
@@ -872,11 +911,6 @@ async def on_message(message):
                     if len(role_list) <= 0:
                         role_list = "Keine Rollen auf dem Server"
                     
-                    color = member.top_role.color
-                    client.AppInfo = await client.application_info()
-                    if member.id == client.user.id:
-                        color=0xFF4642
-                    
                     __AllPerms = ""
                     if member.guild_permissions.administrator:
                         __AllPerms += "Administrator, "
@@ -906,6 +940,16 @@ async def on_message(message):
                     memberName = member
                     if message.guild.owner == member:
                         memberName = str(member) + " 👑"
+                    if member.bot:
+                        memberName = str(member) + " ⚙️"
+                    
+                    color = member.top_role.color
+                    client.AppInfo = await client.application_info()
+                    if member.id == client.user.id:
+                        color=0xFF4642
+                        memberName = str(member) + " 🍒"
+                    if memberName.id == client.AppInfo.owner.id:
+                        memberName = str(member) + " 🔧"
 
                     embed = discord.Embed(title="", description="Name: " + str(member.mention) +
                                                                 "\nID: " + str(member.id) +
